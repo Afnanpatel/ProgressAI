@@ -1,58 +1,59 @@
 # ProgressAI - Personal Progress Tracker
 
-A futuristic, AI-driven personal productivity dashboard designed to help you track goals, tasks, habits, and daily reflections with a premium, glassmorphic UI.
+**ProgressAI** is a futuristic, intelligence-driven productivity system designed to elevate your personal growth. It combines advanced task management with simulated neural insights to help you build consistency, visualize momentum, and achieve your long-term objectives.
 
-![Walkthrough](screenshots/walkthrough.webp)
+## 🚀 Key Features
 
-## 🚀 Features
+*   **Smart Goal Strategy**: Instantly break down ambitious goals into actionable, bite-sized tasks using our simulated neural analysis engine.
+*   **Live Performance Coaching**: Receive dynamic, real-time feedback on your productivity velocity and focus levels directly on your dashboard.
+*   **Visual Habit Tracking**: Build lasting routines with a streak-based habit engine that visualizes your consistency over time.
+*   **Neural Forecasting**: The "AI Hub" analyzes your current pace to predict goal completion dates, keeping you realistic and on track.
+*   **Daily & Weekly Reflections**: A dedicated journaling system to review your progress, learn from setbacks, and plan your next moves.
+*   **Comprehensive Analytics**: Deep-dive into your performance metrics to understand your peak productivity windows and improvement areas.
 
-*   **AI Goal Strategist**: Instantly breaks down complex goals into actionable tasks using simulated neural analysis.
-*   **Live Productivity Coach**: Provides dynamic, context-aware insights on your dashboard based on real-time performance stats.
-*   **Habit Consistency Engine**: Visual habit tracker with streak monitoring and weekly reports.
-*   **Neural Forecasting**: "AI Hub" predicts your goal completion dates based on current velocity.
-*   **Fully Responsive**: Seamless experience across mobile, tablet, and desktop devices.
-*   **Data Privacy**: All data is stored locally in your browser.
+## 📸 Application Overview
 
-## 📸 Functionality Showcase
-
-### 1. The Command Center
-**Dashboard**: Your central hub for real-time stats, AI coaching, and critical deadlines.
+### Command Center
+Your central hub for real-time stats, critical deadlines, and immediate AI coaching insights.
 ![Dashboard](screenshots/dashboard.png)
 
-### 2. Neural Intelligence
-**AI Hub**: Visual forecasts of your goal velocity and cognitive load analysis.
+### Neural Intelligence Hub
+Visual forecasts of your goal velocity and cognitive load analysis to optimize your workflow.
 ![AI Hub](screenshots/ai_hub.png)
 
-### 3. Goal Management
-**Goals Interface**: Track objectives with progress bars, priority levels, and AI breakdown tools.
+### Goal Management
+Track high-level objectives with visual progress bars, priority tags, and automated breakdown tools.
 ![Goals](screenshots/goals.png)
 
-### 4. Actionable Steps
-**Task Board**: Manage your daily tasks with a clean, drag-ready interface (visual only).
+### Actionable Task Board
+A focused interface to manage daily to-dos, linked directly to your larger goals.
 ![Tasks](screenshots/tasks.png)
 
-### 5. Building Consistency
-**Habit Tracker**: Monitor your daily streaks and build lasting routines.
+### Habit Consistency Engine
+Monitor your daily rituals and streaks to build discipline.
 ![Habits](screenshots/habits.png)
 
-### 6. Journaling
-**Reflection Logs**: Daily and weekly review system.
-![Reflections](screenshots/reflections.png)
+---
 
-### 7. Data Insights
-**Analytics**: Deep dive into your performance metrics.
-![Analytics](screenshots/analytics.png)
+## 💡 How to Use ProgressAI
 
-### 8. Data Freedom
-**Downloads**: Export your complete data history.
-![Downloads](screenshots/downloads.png)
+1.  **Define Your Vision**: Start by adding your major objectives in the **Goals** tab. Use the "AI Strategist" button to automatically generate a roadmap of tasks.
+2.  **Execute Daily**: Check the **Dashboard** for your "Critical Path"—the most urgent tasks that move the needle.
+3.  **Build Discipline**: Use the **Habits** tracker to mark off daily rituals. Consistency is key to the "Habit Streak" score.
+4.  **Review & Adapt**: End your day with a quick **Reflection** log. What went well? What didn't?
+5.  **Monitor Growth**: Visit the **AI Hub** and **Analytics** weekly to see your "Velocity Forecast" and adjust your pace accordingly.
 
-### 9. User Controls
-**Profile & Settings**: Manage preferences and data controls.
-![Profile](screenshots/profile.png)
+## 🛠️ Technology Stack
 
+*   **Frontend**: React.js (Vite)
+*   **Styling**: Custom CSS with Glassmorphism Design System
+*   **Icons**: Lucide React
+*   **Data Visualization**: Chart.js
+*   **Persistence**: LocalStorage (Privacy-focused, no server required)
 
-## 🛠️ Installation
+## 📦 Installation
+
+To run this project locally:
 
 1.  Clone the repository:
     ```bash
@@ -62,13 +63,10 @@ A futuristic, AI-driven personal productivity dashboard designed to help you tra
     ```bash
     npm install
     ```
-3.  Start the development server:
+3.  Start the application:
     ```bash
     npm run dev
     ```
-
-## 📱 Mobile Access
-To view on your mobile device, ensure your phone and computer are on the same Wi-Fi network, then access the Network URL shown in your terminal (e.g., `http://192.168.1.x:5173`).
 
 ## 📄 License
 MIT
