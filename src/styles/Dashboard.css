@@ -1,0 +1,372 @@
+.dashboard-container {
+    padding: 1rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.welcome-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: var(--primary-bright);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 800;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.8rem;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.section-subtitle {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.8rem !important;
+}
+
+.stat-icon-wrapper {
+    position: relative;
+}
+
+.stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    filter: blur(20px);
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-top: 0.2rem;
+}
+
+.stat-value-group {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+}
+
+.stat-sub-value {
+    font-size: 0.75rem;
+    font-weight: 700;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.main-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2rem;
+}
+
+.motivation-card {
+    background: var(--accent-gradient) !important;
+    padding: 2rem !important;
+    margin-bottom: 2rem;
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none !important;
+}
+
+.quote-icon {
+    font-size: 4rem;
+    font-family: Georgia, serif;
+    opacity: 0.3;
+    height: 40px;
+    line-height: 1;
+}
+
+.quote-text {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 1rem 0;
+    line-height: 1.4;
+    font-style: italic;
+}
+
+.quote-author {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+.chart-card {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+}
+
+.header-group h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.header-group p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0.2rem 0 0;
+}
+
+.badge.hot {
+    background: #f43f5e;
+    animation: pulse-glow 2s infinite;
+}
+
+.chart-container {
+    flex: 1;
+    position: relative;
+    min-height: 0;
+}
+
+.deadline-item-mini {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    gap: 1rem;
+}
+
+.deadline-item-mini:last-child {
+    border-bottom: none;
+}
+
+.item-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.item-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.progress-ring-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.ring-fill {
+    width: 60px;
+    height: 6px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.ring-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: inherit;
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+.item-percent {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--primary);
+    min-width: 40px;
+}
+
+.insight-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.insight-pulse {
+    width: 12px;
+    height: 12px;
+    background: var(--success);
+    border-radius: 50%;
+    position: relative;
+}
+
+.insight-pulse::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    border-radius: 50%;
+    animation: pulse-glow 1.5s infinite;
+}
+
+.modern-progress-bar {
+    height: 12px;
+    background: var(--border);
+    border-radius: 10px;
+    margin-top: 1.5rem;
+    overflow: hidden;
+}
+
+.progress-value {
+    height: 100%;
+    background: var(--accent-gradient);
+    border-radius: 10px;
+    position: relative;
+}
+
+.shine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shine 2s infinite;
+}
+
+@keyframes shine {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@media (max-width: 1100px) {
+    .main-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1.25rem !important;
+    }
+
+    .stat-value {
+        font-size: 1.4rem;
+    }
+
+    .chart-card {
+        height: 350px;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-title {
+        font-size: 1.6rem;
+    }
+
+    .motivation-card {
+        padding: 1.5rem !important;
+    }
+
+    .quote-text {
+        font-size: 1.1rem;
+    }
+}

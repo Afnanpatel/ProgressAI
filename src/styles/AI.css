@@ -1,0 +1,154 @@
+.ai-hub-container {
+    padding: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.ai-hero-section {
+    padding: 4rem 2rem;
+    text-align: center;
+    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.15), transparent);
+    border-radius: 40px;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.ai-hero-section h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.ai-scanning-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--primary);
+    box-shadow: 0 0 15px var(--primary);
+    animation: scan 4s linear infinite;
+    opacity: 0.3;
+}
+
+@keyframes scan {
+    from {
+        top: 0;
+    }
+
+    to {
+        top: 100%;
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@media (max-width: 768px) {
+    .ai-hero-section {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .ai-hero-section h1 {
+        font-size: 2rem;
+    }
+
+    .ai-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .ai-card {
+        padding: 2.5rem 1.25rem 1.5rem !important;
+    }
+}
+
+.ai-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2.5rem;
+}
+
+.ai-card {
+    padding: 3rem 2rem 2rem !important;
+    /* Increased top padding */
+    position: relative;
+}
+
+.ai-badge-top {
+    position: absolute;
+    top: 1rem;
+    /* Moved inside the padding area */
+    right: 2rem;
+    background: var(--primary-bright);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.forecast-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.forecast-item:last-child {
+    border-bottom: none;
+}
+
+.forecast-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.forecast-title {
+    font-weight: 700;
+}
+
+.forecast-prediction {
+    font-size: 0.8rem;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* AI Strategize Button Animation */
+.strategizing {
+    animation: pulse-glow 1s infinite alternate;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.brain-visual {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-bright);
+    color: white;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    animation: float 3s ease-in-out infinite;
+}

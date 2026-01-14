@@ -1,0 +1,142 @@
+.goals-container {
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.goals-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2.5rem;
+}
+
+.filters-bar {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem !important;
+    border-radius: 20px;
+    margin-bottom: 2.5rem;
+    align-items: center;
+}
+
+.search-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: var(--background);
+    padding: 0.6rem 1.2rem;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+}
+
+.search-box input {
+    background: none;
+    border: none;
+    color: var(--text);
+    width: 100%;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.filter-group select {
+    background: var(--background);
+    border: 1px solid var(--border);
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
+    color: var(--text);
+}
+
+.goals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.goal-card-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.goal-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.goal-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 1rem 0 0.5rem;
+}
+
+.goal-description {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.goal-progress-section {
+    margin-bottom: 1.5rem;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+}
+
+.goal-meta {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+    .goals-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .filters-bar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem !important;
+    }
+
+    .search-box,
+    .filter-group {
+        width: 100%;
+    }
+
+    .goals-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+}

@@ -1,0 +1,181 @@
+.tasks-container {
+    padding: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.tasks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.tasks-list {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem !important;
+    border-radius: 24px;
+    gap: 0.8rem;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem;
+    border-radius: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.task-item:hover {
+    transform: translateX(10px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.15);
+}
+
+.task-item.completed {
+    background: rgba(16, 185, 129, 0.05);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.status-toggle {
+    color: var(--text-muted);
+    transition: all 0.2s;
+}
+
+.status-toggle:hover {
+    color: var(--primary);
+    transform: scale(1.1);
+}
+
+.success-icon {
+    color: var(--success);
+}
+
+.task-info {
+    flex: 1;
+}
+
+.task-title-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.task-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text);
+}
+
+.task-item.completed .task-title {
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.completed-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 4px 8px;
+    background: var(--success);
+    color: white;
+    border-radius: 6px;
+}
+
+.task-meta {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+}
+
+.meta-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--background);
+    padding: 4px 10px;
+    border-radius: 8px;
+}
+
+.effort-badge {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.effort-badge.low {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.effort-badge.medium {
+    background: #fef9c3;
+    color: #a16207;
+}
+
+.effort-badge.high {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.task-notification {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 1000;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .tasks-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .task-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        position: relative;
+    }
+
+    .task-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+    }
+
+    .delete-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+}
