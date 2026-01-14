@@ -35,6 +35,22 @@ A futuristic, AI-driven personal productivity dashboard designed to help you tra
 **Habit Tracker**: Monitor your daily streaks and build lasting routines.
 ![Habits](screenshots/habits.png)
 
+### 6. Journaling
+**Reflection Logs**: Daily and weekly review system.
+![Reflections](screenshots/reflections.png)
+
+### 7. Data Insights
+**Analytics**: Deep dive into your performance metrics.
+![Analytics](screenshots/analytics.png)
+
+### 8. Data Freedom
+**Downloads**: Export your complete data history.
+![Downloads](screenshots/downloads.png)
+
+### 9. User Controls
+**Profile & Settings**: Manage preferences and data controls.
+![Profile](screenshots/profile.png)
+
 
 ## 🛠️ Installation
 
