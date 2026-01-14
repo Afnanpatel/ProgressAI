@@ -13,22 +13,34 @@ A futuristic, AI-driven personal productivity dashboard designed to help you tra
 *   **Fully Responsive**: Seamless experience across mobile, tablet, and desktop devices.
 *   **Data Privacy**: All data is stored locally in your browser.
 
-## 📸 Screenshots
+## 📸 Functionality Showcase
 
-| Dashboard | AI Intelligence Hub |
-|-----------|-------------------|
-| ![Dashboard](screenshots/screen1.png) | ![AI Hub](screenshots/screen2.png) |
+### 1. The Command Center
+**Dashboard**: Your central hub for real-time stats, AI coaching, and critical deadlines.
+![Dashboard](screenshots/dashboard.png)
 
-| Goals View | Mobile View |
-|------------|-------------|
-| ![Goals](screenshots/screen3.png) | *Fully responsive mobile layout* |
+### 2. Neural Intelligence
+**AI Hub**: Visual forecasts of your goal velocity and cognitive load analysis.
+![AI Hub](screenshots/ai_hub.png)
+
+### 3. Goal Management
+**Goals Interface**: Track objectives with progress bars, priority levels, and AI breakdown tools.
+![Goals](screenshots/goals.png)
+
+### 4. Actionable Steps
+**Task Board**: Manage your daily tasks with a clean, drag-ready interface (visual only).
+![Tasks](screenshots/tasks.png)
+
+### 5. Building Consistency
+**Habit Tracker**: Monitor your daily streaks and build lasting routines.
+![Habits](screenshots/habits.png)
 
 
 ## 🛠️ Installation
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/YOUR_USERNAME/personal-progress-tracker.git
+    git clone https://github.com/Afnanpatel/Progress-AI.git
     ```
 2.  Install dependencies:
     ```bash
