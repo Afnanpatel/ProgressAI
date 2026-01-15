@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Plus, CheckCircle2, Circle, Clock, Tag, Trash2 } from 'lucide-react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { initialTasks, initialGoals } from '../data/initialData';
@@ -10,6 +11,7 @@ const TasksView = () => {
   const [goals, setGoals] = useLocalStorage('goals', initialGoals);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [notification, setNotification] = useState({ show: false, message: '' });
+  const [expandedGoalId, setExpandedGoalId] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, taskId: null });
 
   // Sync goal progress when tasks change
@@ -94,44 +96,77 @@ const TasksView = () => {
         </button>
       </div>
 
-      <div className="tasks-list glass">
+      <div className="tasks-list-container">
         {tasks.length === 0 && (
-          <div className="empty-state">No tasks created yet. Click "New Task" to begin.</div>
+          <div className="empty-state glass">No tasks created yet. Click "New Task" to begin.</div>
         )}
-        {tasks.map(task => {
-          const goal = goals.find(g => g.id === task.goalId);
-          const isDone = task.status === 'Done';
+
+        {Object.entries(tasks.reduce((acc, task) => {
+          const goalId = task.goalId || 'uncategorized';
+          if (!acc[goalId]) acc[goalId] = [];
+          acc[goalId].push(task);
+          return acc;
+        }, {})).map(([goalId, goalTasks]) => {
+          const goal = goals.find(g => g.id === goalId);
+          const goalTitle = goal ? goal.title : (goalId === 'uncategorized' ? 'General Tasks' : 'Unknown Goal');
+          const isExpanded = expandedGoalId === goalId;
+          const progress = goal ? goal.progress : 0;
+          const completedCount = goalTasks.filter(t => t.status === 'Done').length;
+
           return (
-            <div key={task.id} className={`task-item scale-in ${isDone ? 'completed' : ''}`}>
-              <button className="status-toggle" onClick={() => toggleTaskStatus(task.id)}>
-                {isDone ? <CheckCircle2 size={24} className="success-icon" /> : <Circle size={24} />}
-              </button>
-              <div className="task-info">
-                <div className="task-title-row">
-                  <span className="task-title">{task.title}</span>
-                  {isDone && <span className="completed-badge">COMPLETED</span>}
+            <div key={goalId} className={`task-group-card card glass ${isExpanded ? 'expanded' : ''}`}>
+              <div
+                className="group-card-header"
+                onClick={() => setExpandedGoalId(isExpanded ? null : goalId)}
+              >
+                <div className="group-info">
+                  <h3 className="group-title">{goalTitle}</h3>
+                  <div className="group-stats">
+                    <span className="badge">{completedCount}/{goalTasks.length} Done</span>
+                    {goal && <span className="progress-text">{progress}% Complete</span>}
+                  </div>
                 </div>
-                <div className="task-meta">
-                  <div className="meta-badge goal-link">
-                    <Tag size={12} />
-                    <span>Goal: {goal ? goal.title : 'No Goal Linked'}</span>
-                  </div>
-                  <div className="meta-badge">
-                    <Clock size={12} />
-                    <span>{task.dueDate}</span>
-                  </div>
-                  <span className={`effort-badge ${task.effort.toLowerCase()}`}>{task.effort}</span>
+                <div className="chevron-icon">
+                  {isExpanded ? '▼' : '▶'}
                 </div>
               </div>
-              <button className="icon-btn delete-btn" onClick={() => handleDeleteTask(task.id)} title="Delete Task">
-                <Trash2 size={18} />
-              </button>
+
+              {isExpanded && (
+                <div className="tasks-list glass fade-in">
+                  {goalTasks.map(task => {
+                    const isDone = task.status === 'Done';
+                    return (
+                      <div key={task.id} className={`task-item scale-in ${isDone ? 'completed' : ''}`}>
+                        <button className="status-toggle" onClick={() => toggleTaskStatus(task.id)}>
+                          {isDone ? <CheckCircle2 size={24} className="success-icon" /> : <Circle size={24} />}
+                        </button>
+                        <div className="task-info">
+                          <div className="task-title-row">
+                            <span className="task-title">{task.title}</span>
+                            {isDone && <span className="completed-badge">COMPLETED</span>}
+                          </div>
+                          <div className="task-meta">
+                            <div className="meta-badge">
+                              <Clock size={12} />
+                              <span>{task.dueDate}</span>
+                            </div>
+                            <span className={`effort-badge ${task.effort.toLowerCase()}`}>{task.effort}</span>
+                          </div>
+                        </div>
+                        <button className="icon-btn delete-btn" onClick={() => handleDeleteTask(task.id)} title="Delete Task">
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           );
         })}
       </div>
 
-      {isModalOpen && (
+      {isModalOpen && createPortal(
         <div className="modal-overlay">
           <div className="modal-content card glass">
             <h3>Create New Task</h3>
@@ -174,7 +209,8 @@ const TasksView = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <ConfirmationModal

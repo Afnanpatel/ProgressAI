@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { BookOpen, Calendar, Smile, Plus, Trash2 } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { BookOpen, Calendar, Smile, Plus, Trash2, Search } from 'lucide-react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { format } from 'date-fns';
 import ConfirmationModal from './ConfirmationModal';
@@ -9,6 +10,8 @@ const ReflectionLogs = () => {
   const [logs, setLogs] = useLocalStorage('reflection_logs', []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [logType, setLogType] = useState('daily');
+  const [filterType, setFilterType] = useState('all'); // 'all', 'daily', 'weekly'
+  const [searchQuery, setSearchQuery] = useState('');
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, logId: null });
 
   const handleAddLog = (e) => {
@@ -40,6 +43,24 @@ const ReflectionLogs = () => {
     setDeleteModal({ isOpen: false, logId: null });
   };
 
+  // Filter Logic
+  const filteredLogs = logs.filter(log => {
+    const matchesType = filterType === 'all' || log.type === filterType;
+    const searchLower = searchQuery.toLowerCase();
+
+    // Check all content fields safely
+    const contentValues = Object.values(log.content || {}).map(v => (v || '').toLowerCase());
+    const matchesKeyword = contentValues.some(val => val.includes(searchLower));
+
+    // Check date
+    const matchesDate = log.date.includes(searchQuery);
+
+    return matchesType && (searchQuery === '' || matchesKeyword || matchesDate);
+  });
+
+  const dailyCount = logs.filter(l => l.type === 'daily').length;
+  const weeklyCount = logs.filter(l => l.type === 'weekly').length;
+
   return (
     <div className="logs-container fade-in">
       <div className="logs-header">
@@ -59,14 +80,56 @@ const ReflectionLogs = () => {
         </div>
       </div>
 
+      {/* Search Bar - Moved to Top */}
+      <div className="logs-controls">
+        <div className="search-box">
+          <Search size={20} className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search logs by keyword or date..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="logs-summary-grid">
+        <div
+          className={`summary-card card glass ${filterType === 'daily' ? 'active' : ''}`}
+          onClick={() => setFilterType(filterType === 'daily' ? 'all' : 'daily')}
+        >
+          <div className="summary-icon daily-icon">
+            <BookOpen size={24} />
+          </div>
+          <div className="summary-info">
+            <h3>Daily Journals</h3>
+            <p>{dailyCount} Entries</p>
+          </div>
+        </div>
+
+        <div
+          className={`summary-card card glass ${filterType === 'weekly' ? 'active' : ''}`}
+          onClick={() => setFilterType(filterType === 'weekly' ? 'all' : 'weekly')}
+        >
+          <div className="summary-icon weekly-icon">
+            <Calendar size={24} />
+          </div>
+          <div className="summary-info">
+            <h3>Weekly Reviews</h3>
+            <p>{weeklyCount} Entries</p>
+          </div>
+        </div>
+      </div>
+
       <div className="logs-timeline">
-        {logs.length === 0 ? (
+        {filteredLogs.length === 0 ? (
           <div className="empty-state card glass">
             <BookOpen size={48} />
-            <p>No logs yet. Start by reflecting on your day!</p>
+            <p>No logs found matching your criteria.</p>
           </div>
         ) : (
-          logs.map(log => (
+          filteredLogs.map(log => (
             <div key={log.id} className={`log-entry card glass scale-in ${log.type}`}>
               <div className="log-entry-header">
                 <div className="log-meta">
@@ -124,7 +187,7 @@ const ReflectionLogs = () => {
         )}
       </div>
 
-      {isModalOpen && (
+      {isModalOpen && createPortal(
         <div className="modal-overlay">
           <div className="modal-content card glass">
             <h3>{logType === 'daily' ? 'Daily Reflection' : 'Weekly Review'}</h3>
@@ -170,7 +233,8 @@ const ReflectionLogs = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <ConfirmationModal

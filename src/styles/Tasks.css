@@ -11,6 +11,96 @@
     margin-bottom: 2rem;
 }
 
+/* Main Grid Layout */
+.tasks-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Group Card Styling */
+.task-group-card {
+    padding: 0;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--border);
+}
+
+.task-group-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+}
+
+.task-group-card.expanded {
+    background: var(--surface);
+    border-color: var(--primary-bright);
+    box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.15);
+}
+
+/* Card Header (Clickable) */
+.group-card-header {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.03);
+    transition: background 0.2s;
+    flex-wrap: wrap;
+    /* Allow wrapping on small screens */
+    gap: 0.5rem;
+}
+
+.group-card-header:hover {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.group-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.group-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.group-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    align-items: center;
+}
+
+.progress-text {
+    color: var(--text-muted);
+}
+
+/* Chevron Animation */
+.chevron-icon {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    transition: transform 0.3s ease;
+}
+
+.task-group-card.expanded .chevron-icon {
+    transform: rotate(180deg);
+}
+
+/* Inner Task List */
+.tasks-list {
+    padding: 1rem 1.5rem 1.5rem 1.5rem !important;
+    background: transparent !important;
+    border: none !important;
+    border-top: 1px solid var(--border) !important;
+    gap: 0.8rem;
+    display: flex;
+    flex-direction: column;
+}
+
 .tasks-list {
     display: flex;
     flex-direction: column;

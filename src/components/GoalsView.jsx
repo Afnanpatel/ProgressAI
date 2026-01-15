@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Plus, Search, Filter } from 'lucide-react';
 import GoalCard from './GoalCard';
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -95,7 +96,7 @@ const GoalsView = () => {
         ))}
       </div>
 
-      {isModalOpen && (
+      {isModalOpen && createPortal(
         <div className="modal-overlay">
           <div className="modal-content card glass">
             <h3>Create New Goal</h3>
@@ -146,7 +147,8 @@ const GoalsView = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <ConfirmationModal

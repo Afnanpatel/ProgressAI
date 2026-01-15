@@ -29,37 +29,60 @@ export const getRandomCoachInsight = (stats) => {
     return insights[Math.floor(Math.random() * insights.length)];
 };
 
-export const suggestTasksForGoal = (goalTitle, category) => {
-    const defaultTasks = ["Step 1: Research and Planning", "Step 2: Initialize Core Setup", "Step 3: Execute Primary Phase", "Step 4: Review and Refine"];
+export const suggestTasksForGoal = (goalTitle, category, currentTaskCount = 0) => {
+    const startStep = currentTaskCount + 1;
 
+    // Advanced dynamic templates
+    const dynamicActions = [
+        "Analyze progress on", "Deep dive into", "Optimize workflow for", "Review milestones regarding",
+        "Expand scope of", "Validate assumptions for", "Consult mentor about", "Run performance tests on",
+        "Brainstorm next phase for", "Consolidate learning from"
+    ];
+
+    // Simple context-specific bases
     const contextMap = {
         'Skills': [
-            "Identify top 3 resources (Books/Courses)",
-            "Set a 30-day learning curriculum",
-            "Build a small project to demonstrate skill",
-            "Teach/Explain the concept to someone else"
+            "Research best resources", "Create learning roadmap", "Build practice project", "Teach concept to peer",
+            "Solve 5 practice problems", "Read advanced chapter", "Refactor practice code", "Join community discussion",
+            "Attempt certification mock", "Write technical blog post"
         ],
         'Career': [
-            "Update professional profile and resume",
-            "Network with 3 industry professionals",
-            "List required certifications or milestones",
-            "Apply for 2 high-matching roles"
+            "Update resume", "Network on LinkedIn", "Identify skill gaps", "Apply to 3 jobs",
+            "Prepare interview answers", "Research target companies", "Request peer feedback", "Attend industry webinar",
+            "Update portfolio site", "Draft cover letter"
         ],
         'Fitness': [
-            "Schedule 3 workouts this week",
-            "Define specific nutritional goals",
-            "Join a local group or find a coach",
-            "Track baseline measurements today"
+            "Morning workout session", "Meal prep for 3 days", "Track body measurements", "Rest and recovery",
+            "High-intensity cardio", "Strength training block", "Research nutrition plan", "Hydration tracking log",
+            "Stretching routine", "Sleep quality audit"
         ],
         'Finance': [
-            "Audit expenses from the last 30 days",
-            "Set up automatic savings transfer",
-            "Research 2 low-risk investment options",
-            "Define a clear 6-month budget"
+            "Audit monthly expenses", "Automate savings", "Review investment portfolio", "Set quarterly budget",
+            "Read financial news", "Check credit score", "Cancel unused subs", "Plan tax strategy",
+            "Research new ETFs", "Review insurance policy"
         ]
     };
 
-    return contextMap[category] || defaultTasks;
+    const specificTasks = contextMap[category] || [];
+    const generatedTasks = [];
+
+    for (let i = 0; i < 4; i++) {
+        const stepNum = startStep + i;
+        const taskIndex = currentTaskCount + i;
+
+        // 1. Try to get a specific pre-written task if available and not "used" (simulated by index)
+        if (taskIndex < specificTasks.length) {
+            generatedTasks.push(`Step ${stepNum}: ${specificTasks[taskIndex]}`);
+        } else {
+            // 2. Fallback to dynamic generation for infinite tasks
+            const action = dynamicActions[taskIndex % dynamicActions.length];
+            // Truncate goal title if too long to keep it clean
+            const shortTitle = goalTitle.length > 20 ? goalTitle.substring(0, 20) + "..." : goalTitle;
+            generatedTasks.push(`Step ${stepNum}: ${action} "${shortTitle}"`);
+        }
+    }
+
+    return generatedTasks;
 };
 
 export const getForecastAnalytics = (goals) => {

@@ -45,10 +45,17 @@
 }
 
 .filter-group select {
-    background: var(--background);
+    background: var(--surface);
+    /* Changed from background to surface for better contrast */
     border: 1px solid var(--border);
     padding: 0.6rem 1rem;
     border-radius: 12px;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.filter-group select option {
+    background: var(--surface);
     color: var(--text);
 }
 
@@ -137,6 +144,7 @@
 
     .goals-grid {
         grid-template-columns: 1fr;
-        gap: 1.25rem;
+        /* Full width on mobile */
+        gap: 1.5rem;
     }
 }

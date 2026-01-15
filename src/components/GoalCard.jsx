@@ -23,7 +23,8 @@ const GoalCard = ({ goal, onDelete }) => {
     const handleAIStrategize = () => {
         setIsStrategizing(true);
         setTimeout(() => {
-            const suggestedTitles = suggestTasksForGoal(goal.title, goal.category);
+            const existingGoalTasks = tasks.filter(t => t.goalId === goal.id);
+            const suggestedTitles = suggestTasksForGoal(goal.title, goal.category, existingGoalTasks.length);
             const newTasks = suggestedTitles.map(title => ({
                 id: Date.now().toString() + Math.random(),
                 goalId: goal.id,
@@ -44,7 +45,7 @@ const GoalCard = ({ goal, onDelete }) => {
             {showAINotification && (
                 <div className="task-notification glass ai-notif fade-in">
                     <Sparkles size={18} />
-                    <span>AI Strategist generated {suggestTasksForGoal(goal.title, goal.category).length} tasks!</span>
+                    <span>AI Strategist generated {suggestTasksForGoal(goal.title, goal.category, tasks.filter(t => t.goalId === goal.id).length).length} new tasks!</span>
                 </div>
             )}
             <div className="goal-card-header">

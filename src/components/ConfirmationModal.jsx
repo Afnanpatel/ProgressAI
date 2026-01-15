@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { X, AlertTriangle } from 'lucide-react';
 import './ConfirmationModal.css';
 
@@ -14,7 +15,7 @@ const ConfirmationModal = ({
 }) => {
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div className="modal-overlay fade-in">
             <div className="modal-content confirmation-modal card glass scale-in">
                 <div className="confirmation-header">
@@ -40,7 +41,8 @@ const ConfirmationModal = ({
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

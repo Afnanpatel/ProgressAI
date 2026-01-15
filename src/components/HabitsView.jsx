@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Plus, Flame, CheckCircle2, Trash2, TrendingUp } from 'lucide-react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { initialHabits } from '../data/initialData';
@@ -183,7 +184,7 @@ const HabitsView = () => {
         ))}
       </div>
 
-      {isModalOpen && (
+      {isModalOpen && createPortal(
         <div className="modal-overlay">
           <div className="modal-content card glass">
             <h3>Add New Habit</h3>
@@ -206,10 +207,11 @@ const HabitsView = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
-      {reflectionModal.isOpen && (
+      {reflectionModal.isOpen && createPortal(
         <div className="modal-overlay">
           <div className="modal-content card glass reflection-modal">
             <div className="modal-header">
@@ -234,7 +236,8 @@ const HabitsView = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <ConfirmationModal

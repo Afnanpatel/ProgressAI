@@ -84,11 +84,17 @@
     height: 44px;
     border-radius: 14px;
     background: var(--background);
-    border: 2px solid var(--border);
+    border: 2px solid #e2e8f0;
+    /* Darker border for light mode visibility */
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
+}
+
+[data-theme='dark'] .day-box {
+    border-color: var(--border);
+    /* Revert to standard border in dark mode */
 }
 
 .day-box.completed {
