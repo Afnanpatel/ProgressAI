@@ -2,6 +2,13 @@
     padding: 1.5rem;
 }
 
+.habits-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+}
+
 .habits-grid {
     padding: 0 !important;
     overflow: hidden;
@@ -79,6 +86,12 @@
     color: var(--text);
 }
 
+.day-placeholder {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+}
+
 .day-box {
     width: 44px;
     height: 44px;
@@ -147,6 +160,11 @@
 }
 
 @media (max-width: 992px) {
+    .habits-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
 
     .habits-table-header,
     .habit-row {
@@ -156,26 +174,45 @@
 
 @media (max-width: 768px) {
     .habits-grid {
+        display: block;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+        padding-bottom: 5px !important;
+        /* Allow scrollbar space */
     }
 
     .habits-table-header,
     .habit-row {
         min-width: 800px;
         /* Force minimum width to prevent squishing */
+        display: flex;
+        /* Ensure flex behavior matches desktop */
     }
 
     .habit-name-col {
         width: 180px;
+        flex-shrink: 0;
+        /* Prevent title from shrinking */
     }
 
     .habit-title {
         font-size: 0.95rem;
+        white-space: normal;
+        /* Allow title wrapping if needed */
+    }
+
+    .streak-badge {
+        font-size: 0.7rem;
+        padding: 2px 8px;
     }
 }
 
 @media (max-width: 480px) {
+    .habits-container {
+        padding: 1rem;
+    }
+
     .day-num {
         font-size: 1rem;
     }
