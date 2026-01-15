@@ -1,72 +1,96 @@
-# ProgressAI - Personal Progress Tracker
+# ProgressAI - Personal Progress Tracker 🚀
 
-**ProgressAI** is a futuristic, intelligence-driven productivity system designed to elevate your personal growth. It combines advanced task management with simulated neural insights to help you build consistency, visualize momentum, and achieve your long-term objectives.
+![ProgressAI Banner](https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80) 
+*(Example Placeholder Banner)*
 
-## 🚀 Key Features
-
-*   **Smart Goal Strategy**: Instantly break down ambitious goals into actionable, bite-sized tasks using our simulated neural analysis engine.
-*   **Live Performance Coaching**: Receive dynamic, real-time feedback on your productivity velocity and focus levels directly on your dashboard.
-*   **Visual Habit Tracking**: Build lasting routines with a streak-based habit engine that visualizes your consistency over time.
-*   **Neural Forecasting**: The "AI Hub" analyzes your current pace to predict goal completion dates, keeping you realistic and on track.
-*   **Daily & Weekly Reflections**: A dedicated journaling system to review your progress, learn from setbacks, and plan your next moves.
-*   **Comprehensive Analytics**: Deep-dive into your performance metrics to understand your peak productivity windows and improvement areas.
-
-## 📸 Application Overview
-
-### Command Center
-Your central hub for real-time stats, critical deadlines, and immediate AI coaching insights.
-![Dashboard](screenshots/dashboard.png)
-
-### Neural Intelligence Hub
-Visual forecasts of your goal velocity and cognitive load analysis to optimize your workflow.
-![AI Hub](screenshots/ai_hub.png)
-
-### Goal Management
-Track high-level objectives with visual progress bars, priority tags, and automated breakdown tools.
-![Goals](screenshots/goals.png)
-
-### Actionable Task Board
-A focused interface to manage daily to-dos, linked directly to your larger goals.
-![Tasks](screenshots/tasks.png)
-
-### Habit Consistency Engine
-Monitor your daily rituals and streaks to build discipline.
-![Habits](screenshots/habits.png)
+**ProgressAI** is a modern, AI-powered personal development dashboard designed to help you track goals, build habits, and reflect on your daily progress. Built with a focus on aesthetics, interactivity, and intelligent insights.
 
 ---
 
-## 💡 How to Use ProgressAI
+## ✨ Features
 
-1.  **Define Your Vision**: Start by adding your major objectives in the **Goals** tab. Use the "AI Strategist" button to automatically generate a roadmap of tasks.
-2.  **Execute Daily**: Check the **Dashboard** for your "Critical Path"—the most urgent tasks that move the needle.
-3.  **Build Discipline**: Use the **Habits** tracker to mark off daily rituals. Consistency is key to the "Habit Streak" score.
-4.  **Review & Adapt**: End your day with a quick **Reflection** log. What went well? What didn't?
-5.  **Monitor Growth**: Visit the **AI Hub** and **Analytics** weekly to see your "Velocity Forecast" and adjust your pace accordingly.
+### 🎯 Smart Goal Management
+*   **Visual Tracking**: Track progress with beautiful radial charts and progress bars.
+*   **Expandable Cards**: Organize tasks within goals using an intuitive card interface.
+*   **AI Strategist**: Get intelligent, sequential task breakdowns for your goals using our integrated AI mock engine.
 
-## 🛠️ Technology Stack
+### 📅 Advanced Habit Tracker
+*   **Flexible Frequencies**: Set habits for Daily, Weekdays, or Weekends.
+*   **Interactive Grid**: Visual streak tracking with satisfying check-in animations.
+*   **Smart Filtering**: Weekday/Weekend visibility logic to reduce clutter.
 
-*   **Frontend**: React.js (Vite)
-*   **Styling**: Custom CSS with Glassmorphism Design System
-*   **Icons**: Lucide React
-*   **Data Visualization**: Chart.js
-*   **Persistence**: LocalStorage (Privacy-focused, no server required)
+### 📓 Intelligent Reflection Logs
+*   **Daily & Weekly Modes**: separate journals for daily insights and weekly reviews.
+*   **Searchable History**: Find past learnings instantly with a powerful search bar.
+*   **Insight Summary**: Quick-glance cards showing your total journal entries.
 
-## 📦 Installation
+### 🎨 Premium UI/UX
+*   **Glassmorphism Design**: Modern, clean aesthetics with blurred backdrops and gradients.
+*   **Theme Support**: Fully responsive Light and Dark modes.
+*   **Mobile Optimized**: Seamless experience across Desktop, Tablet, and Mobile.
 
-To run this project locally:
+---
 
-1.  Clone the repository:
+## 🛠️ Tech Stack
+
+*   **Frontend**: React (Vite)
+*   **Styling**: Vanilla CSS (Variables, Responsive Design, Animations)
+*   **Icons**: Lucide-React
+*   **State Management**: React Hooks & LocalStorage
+*   **Build Tool**: Vite
+
+---
+
+## 🚀 Getting Started
+
+Follow these steps to run the project locally.
+
+### Prerequisites
+*   Node.js (v16 or higher)
+*   npm or yarn
+
+### Installation
+
+1.  **Clone the repository**
     ```bash
-    git clone https://github.com/Afnanpatel/Progress-AI.git
+    git clone https://github.com/Afnanpatel/ProgressAI.git
+    cd ProgressAI
     ```
-2.  Install dependencies:
+
+2.  **Install dependencies**
     ```bash
     npm install
     ```
-3.  Start the application:
+
+3.  **Start the development server**
     ```bash
     npm run dev
     ```
 
+4.  **Open the app**
+    Visit `http://localhost:5173` in your browser.
+
+---
+
+## 📱 Mobile Experience
+
+ProgressAI is built with a "Mobile-First" mindset for the modern user:
+*   **Adaptive Sidebar**: Off-canvas navigation that doesn't obstruct content.
+*   **Touch-Friendly**: Large tap targets and swipe-friendly layouts.
+*   **Responsive Grids**: Layouts that stack intelligently on smaller screens.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please fork the repository and create a pull request for any feature suggestions or bug fixes.
+
+---
+
 ## 📄 License
-MIT
+
+This project is open-source and available under the [MIT License](LICENSE).
+
+---
+
+<p align="center">Made with ❤️ by Afnan Patel</p>
