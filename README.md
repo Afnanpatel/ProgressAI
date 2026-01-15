@@ -1,7 +1,6 @@
 # ProgressAI - Personal Progress Tracker 🚀
 
-![ProgressAI Banner](https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80) 
-*(Example Placeholder Banner)*
+
 
 **ProgressAI** is a modern, AI-powered personal development dashboard designed to help you track goals, build habits, and reflect on your daily progress. Built with a focus on aesthetics, interactivity, and intelligent insights.
 
