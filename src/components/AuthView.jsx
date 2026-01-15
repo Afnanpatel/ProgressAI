@@ -4,7 +4,7 @@ import { Layout as LayoutIcon, Mail, Lock, User as UserIcon } from 'lucide-react
 import '../styles/Auth.css';
 
 const AuthView = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const { login, signup } = useAuth();
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');

@@ -4,7 +4,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
-        const savedUser = localStorage.getItem('auth_user');
+        const savedUser = sessionStorage.getItem('auth_user');
         return savedUser ? JSON.parse(savedUser) : null;
     });
 
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
         const mockUser = { id: foundUser.id, name: foundUser.name, email: foundUser.email };
         setUser(mockUser);
-        localStorage.setItem('auth_user', JSON.stringify(mockUser));
+        sessionStorage.setItem('auth_user', JSON.stringify(mockUser));
         return true;
     };
 
@@ -43,19 +43,19 @@ export const AuthProvider = ({ children }) => {
 
         const mockUser = { id: newUser.id, name: newUser.name, email: newUser.email };
         setUser(mockUser);
-        localStorage.setItem('auth_user', JSON.stringify(mockUser));
+        sessionStorage.setItem('auth_user', JSON.stringify(mockUser));
         return true;
     };
 
     const logout = () => {
         setUser(null);
-        localStorage.removeItem('auth_user');
+        sessionStorage.removeItem('auth_user');
     };
 
     const updateUser = (updates) => {
         const newUser = { ...user, ...updates };
         setUser(newUser);
-        localStorage.setItem('auth_user', JSON.stringify(newUser));
+        sessionStorage.setItem('auth_user', JSON.stringify(newUser));
 
         // Also update in registered_users for persistence across logins
         const users = JSON.parse(localStorage.getItem('registered_users') || '[]');
