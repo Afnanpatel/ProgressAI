@@ -43,6 +43,11 @@
     box-sizing: border-box;
 }
 
+html {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
     background-color: var(--background);
@@ -54,6 +59,10 @@ body {
         radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.05) 0px, transparent 50%);
     min-height: 100vh;
+    width: 100%;
+    position: relative;
+    overscroll-behavior-y: none;
+    /* Prevents pull-to-refresh effecting layout on some devices */
 }
 
 /* Animations */

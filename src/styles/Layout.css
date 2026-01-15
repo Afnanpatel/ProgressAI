@@ -210,6 +210,8 @@
         margin-left: 0 !important;
         padding: 0 1rem;
         width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
     }
 
     .main-header {
