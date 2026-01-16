@@ -189,6 +189,27 @@ const HabitsView = () => {
 
         <div className="detail-content">
           <HabitCalendar habit={selectedHabit} streak={getStreak(selectedHabit)} />
+
+          <div className="habit-insights">
+            <h3 className="section-label">Recent Insights</h3>
+            <div className="insights-list">
+              {selectedHabit.logs && selectedHabit.logs.filter(l => l.note).length > 0 ? (
+                selectedHabit.logs.filter(l => l.note).reverse().map((log, idx) => (
+                  <div key={idx} className="insight-card">
+                    <div className="insight-header">
+                      <span className="insight-date">{format(new Date(log.date), 'MMM d, yyyy')}</span>
+                    </div>
+                    <p className="insight-text">"{log.note}"</p>
+                  </div>
+                ))
+              ) : (
+                <div className="empty-insights">
+                  <Smile size={32} />
+                  <p>No reflections recorded yet. Keep going!</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         <ConfirmationModal
