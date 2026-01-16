@@ -3,7 +3,8 @@ import { createPortal } from 'react-dom';
 import { Plus, Flame, CheckCircle2, Trophy, MoreVertical, ArrowLeft, Calendar as CalendarIcon, Smile, Dumbbell, BookOpen, Sun, Moon, Coffee, AlertCircle } from 'lucide-react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { initialHabits } from '../data/initialData';
-import { format, subDays, differenceInCalendarDays } from 'date-fns';
+import { format } from 'date-fns';
+import { calculateHabitStreak, calculateMasterStreak } from '../utils/habitUtils';
 import ConfirmationModal from './ConfirmationModal';
 import HabitCalendar from './HabitCalendar';
 import '../styles/Habits.css';
@@ -22,7 +23,7 @@ const getIconForHabit = (title) => {
 
 const HabitsView = () => {
   const [habits, setHabits] = useLocalStorage('habits', initialHabits);
-  const [selectedHabitId, setSelectedHabitId] = useState(null); // Store ID for reactivity
+  const [selectedHabitId, setSelectedHabitId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, habitId: null });
   const [reflectionModal, setReflectionModal] = useState({ isOpen: false, habitId: null });
@@ -32,7 +33,7 @@ const HabitsView = () => {
   const today = new Date();
   const dateStr = format(today, 'yyyy-MM-dd');
 
-  // Derive selected habit from state
+  // Derive selected habit from state for reactivity
   const selectedHabit = habits.find(h => h.id === selectedHabitId);
 
   // Dashboard Stats
@@ -42,90 +43,7 @@ const HabitsView = () => {
   ).length;
   const completionRate = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
-  // Robust Dynamic Streak Calculation
-  const getStreak = (habit) => {
-    const logs = habit.logs || [];
-    if (logs.length === 0) return 0;
-
-    let streakCount = 0;
-    let checkDate = new Date();
-
-    // Use a Set for O(1) lookups
-    const completedDates = new Set(logs.filter(l => l.completed).map(l => l.date));
-
-    // Start checking from today backwards
-    while (true) {
-      const dStr = format(checkDate, 'yyyy-MM-dd');
-      const dayOfWeek = checkDate.getDay();
-      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-
-      let shouldHaveCompleted = true;
-      if (habit.frequency === 'Weekdays' && isWeekend) shouldHaveCompleted = false;
-      if (habit.frequency === 'Weekends' && !isWeekend) shouldHaveCompleted = false;
-
-      if (shouldHaveCompleted) {
-        if (completedDates.has(dStr)) {
-          streakCount++;
-        } else {
-          // If it's today and not yet completed, don't break the streak yet
-          if (dStr === dateStr) {
-            checkDate = subDays(checkDate, 1);
-            continue;
-          }
-          break; // Streak broken
-        }
-      }
-      checkDate = subDays(checkDate, 1);
-
-      // Safety break
-      if (differenceInCalendarDays(today, checkDate) > 365) break;
-    }
-    return streakCount;
-  };
-
-  // Master Streak: Days where ALL scheduled habits were completed
-  const calculateMasterStreak = () => {
-    if (habits.length === 0) return 0;
-    let streakCount = 0;
-    let checkDate = new Date();
-
-    while (true) {
-      const dStr = format(checkDate, 'yyyy-MM-dd');
-      const dayOfWeek = checkDate.getDay();
-      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-
-      const scheduledHabits = habits.filter(h => {
-        if (h.frequency === 'Daily') return true;
-        if (h.frequency === 'Weekdays' && !isWeekend) return true;
-        if (h.frequency === 'Weekends' && isWeekend) return true;
-        return false;
-      });
-
-      if (scheduledHabits.length > 0) {
-        const allDone = scheduledHabits.every(h =>
-          h.logs.some(l => l.date === dStr && l.completed)
-        );
-        if (allDone) {
-          streakCount++;
-        } else {
-          if (dStr === dateStr) {
-            checkDate = subDays(checkDate, 1);
-            continue;
-          }
-          break;
-        }
-      } else {
-        // No habits scheduled for this day, doesn't break streak but doesn't increment it?
-        // Actually, usually in habit trackers, a "Perfect Day" streak skips days with no habits.
-        // But here "Perfect Days" are days where you DID what you were supposed to.
-        // We'll skip days with no scheduled habits.
-      }
-      checkDate = subDays(checkDate, 1);
-      if (differenceInCalendarDays(today, checkDate) > 365) break;
-    }
-    return streakCount;
-  };
-  const masterStreak = calculateMasterStreak();
+  const masterStreak = calculateMasterStreak(habits, today);
 
   const handleToggleClick = (habitId) => {
     const habit = habits.find(h => h.id === habitId);
@@ -135,7 +53,7 @@ const HabitsView = () => {
     if (isCompleted) return;
 
     // Day of week check
-    const dayOfWeek = today.getDay(); // 0 is Sunday, 6 is Saturday
+    const dayOfWeek = today.getDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     const isWeekday = !isWeekend;
 
@@ -148,7 +66,6 @@ const HabitsView = () => {
       return;
     }
 
-    // If not completed, open reflection modal.
     setReflectionModal({ isOpen: true, habitId });
     setLearningNote('');
   };
@@ -159,7 +76,7 @@ const HabitsView = () => {
     setHabits(habits.map(habit => {
       if (habit.id !== habitId) return habit;
 
-      const newLogs = [...habit.logs, { date: dateStr, completed: true, note: learningNote }];
+      const newLogs = [...(habit.logs || []), { date: dateStr, completed: true, note: learningNote }];
       return { ...habit, logs: newLogs };
     }));
     setReflectionModal({ isOpen: false, habitId: null });
@@ -203,7 +120,7 @@ const HabitsView = () => {
         </div>
 
         <div className="detail-content">
-          <HabitCalendar habit={selectedHabit} streak={getStreak(selectedHabit)} />
+          <HabitCalendar habit={selectedHabit} streak={calculateHabitStreak(selectedHabit, today)} />
 
           <div className="habit-insights">
             <h3 className="section-label">Recent Insights</h3>
@@ -241,7 +158,6 @@ const HabitsView = () => {
   // --- MAIN DASHBOARD VIEW ---
   return (
     <div className="habits-dashboard fade-in">
-      {/* Blue Dashboard Card */}
       <div className="dashboard-header-card">
         <div className="header-top">
           <h2>My Habits</h2>
@@ -266,14 +182,13 @@ const HabitsView = () => {
         </div>
       </div>
 
-      {/* Today's List */}
       <div className="habits-list-section">
         <div className="section-label">Today</div>
 
         <div className="habits-vertical-list">
           {habits.map(habit => {
-            const isCompleted = habit.logs.some(l => l.date === dateStr);
-            const currentStreak = getStreak(habit);
+            const isCompleted = habit.logs && habit.logs.some(l => l.date === dateStr);
+            const currentStreak = calculateHabitStreak(habit, today);
 
             return (
               <div key={habit.id} className="habit-list-card" onClick={() => setSelectedHabitId(habit.id)}>
@@ -304,7 +219,6 @@ const HabitsView = () => {
           })}
         </div>
 
-        {/* New Summary Card below list */}
         {habits.length > 0 && (
           <div className="habit-summary-footer glass card" style={{ marginTop: '2rem', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div className="summary-text">

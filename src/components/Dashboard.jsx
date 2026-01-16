@@ -6,11 +6,13 @@ import {
   Flame,
   TrendingUp,
   AlertCircle,
-  Sparkles
+  Sparkles,
+  Trophy
 } from 'lucide-react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { initialGoals, initialTasks, initialHabits } from '../data/initialData';
 import { getRandomCoachInsight } from '../utils/aiMockServices';
+import { calculateHabitStreak, calculateMasterStreak } from '../utils/habitUtils';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -72,14 +74,16 @@ const Dashboard = () => {
   const [quote] = React.useState(() => quotes[Math.floor(Math.random() * quotes.length)]);
 
   const completedGoals = goals.filter(g => g.status === 'Completed').length;
-  // ... (rest of the logic remains the same)
   const activeGoalsCount = goals.filter(g => g.status !== 'Completed').length;
   const completedTasks = tasks.filter(t => t.status === 'Done').length;
   const totalTasks = tasks.length;
   const taskCompletionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
+  // Use improved streak logic
+  const today = new Date();
+  const masterStreak = calculateMasterStreak(habits, today);
   const avgHabitStreak = habits.length > 0
-    ? Math.round(habits.reduce((acc, h) => acc + h.streak, 0) / habits.length)
+    ? Math.round(habits.reduce((acc, h) => acc + calculateHabitStreak(h, today), 0) / habits.length)
     : 0;
 
   const categoryData = {
@@ -129,10 +133,10 @@ const Dashboard = () => {
           <p className="section-subtitle">You're making incredible strides today. Keep the fire burning!</p>
         </div>
         <div className="quick-actions">
-          <button className="btn-primary">
-            <TrendingUp size={18} />
-            <span>Smart Analysis</span>
-          </button>
+          <div className="master-streak-badge" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(245, 158, 11, 0.1)', padding: '8px 16px', borderRadius: '30px', color: '#f59e0b', fontWeight: '800' }}>
+            <Flame size={20} />
+            <span>{masterStreak} DAY TOTAL STREAK</span>
+          </div>
         </div>
       </div>
 
@@ -152,10 +156,10 @@ const Dashboard = () => {
           color="#10b981"
         />
         <StatCard
-          title="Habit Streak"
-          value={`${avgHabitStreak} days`}
-          subValue="Consistency"
-          icon={Flame}
+          title="Total Streak"
+          value={`${masterStreak} days`}
+          subValue="Perfect Consistency"
+          icon={Trophy}
           color="#f59e0b"
         />
         <StatCard
@@ -253,7 +257,7 @@ const Dashboard = () => {
                 "{getRandomCoachInsight({
                   goalsCount: goals.length,
                   tasksDone: completedTasks,
-                  habitsStreak: avgHabitStreak
+                  habitsStreak: masterStreak
                 })}"
               </p>
               <div className="modern-progress-bar">

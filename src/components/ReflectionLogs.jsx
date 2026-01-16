@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { BookOpen, Calendar, Smile, Plus, Trash2, Search } from 'lucide-react';
+import { BookOpen, Calendar, Smile, Plus, Trash2, Search, Flame } from 'lucide-react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { format } from 'date-fns';
+import { initialHabits } from '../data/initialData';
+import { calculateMasterStreak } from '../utils/habitUtils';
 import ConfirmationModal from './ConfirmationModal';
 import '../styles/Logs.css';
 
 const ReflectionLogs = () => {
   const [logs, setLogs] = useLocalStorage('reflection_logs', []);
+  const [habits] = useLocalStorage('habits', initialHabits);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [logType, setLogType] = useState('daily');
   const [filterType, setFilterType] = useState('all'); // 'all', 'daily', 'weekly'
@@ -61,6 +64,9 @@ const ReflectionLogs = () => {
   const dailyCount = logs.filter(l => l.type === 'daily').length;
   const weeklyCount = logs.filter(l => l.type === 'weekly').length;
 
+  const today = new Date();
+  const masterStreak = calculateMasterStreak(habits, today);
+
   return (
     <div className="logs-container fade-in">
       <div className="logs-header">
@@ -80,7 +86,6 @@ const ReflectionLogs = () => {
         </div>
       </div>
 
-      {/* Search Bar - Moved to Top */}
       <div className="logs-controls">
         <div className="search-box">
           <Search size={20} className="search-icon" />
@@ -93,7 +98,6 @@ const ReflectionLogs = () => {
         </div>
       </div>
 
-      {/* Summary Cards */}
       <div className="logs-summary-grid">
         <div
           className={`summary-card card glass ${filterType === 'daily' ? 'active' : ''}`}
@@ -118,6 +122,17 @@ const ReflectionLogs = () => {
           <div className="summary-info">
             <h3>Weekly Reviews</h3>
             <p>{weeklyCount} Entries</p>
+          </div>
+        </div>
+
+        {/* Total Streak Card in Reflections too */}
+        <div className="summary-card card glass streak-summary-card">
+          <div className="summary-icon streak-icon" style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
+            <Flame size={24} />
+          </div>
+          <div className="summary-info">
+            <h3>Total Streak</h3>
+            <p>{masterStreak} Days</p>
           </div>
         </div>
       </div>
