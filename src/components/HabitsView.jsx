@@ -22,7 +22,7 @@ const getIconForHabit = (title) => {
 
 const HabitsView = () => {
   const [habits, setHabits] = useLocalStorage('habits', initialHabits);
-  const [selectedHabit, setSelectedHabit] = useState(null); // If set, shows Detail/Calendar view
+  const [selectedHabitId, setSelectedHabitId] = useState(null); // Store ID for reactivity
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, habitId: null });
   const [reflectionModal, setReflectionModal] = useState({ isOpen: false, habitId: null });
@@ -31,6 +31,9 @@ const HabitsView = () => {
 
   const today = new Date();
   const dateStr = format(today, 'yyyy-MM-dd');
+
+  // Derive selected habit from state
+  const selectedHabit = habits.find(h => h.id === selectedHabitId);
 
   // Dashboard Stats
   const totalHabits = habits.length;
@@ -80,37 +83,49 @@ const HabitsView = () => {
     return streakCount;
   };
 
-  // Dynamic Perfect Days calculation (checking last 7 days)
-  const calculatePerfectDays = () => {
-    let perfectCount = 0;
+  // Master Streak: Days where ALL scheduled habits were completed
+  const calculateMasterStreak = () => {
     if (habits.length === 0) return 0;
+    let streakCount = 0;
+    let checkDate = new Date();
 
-    for (let i = 0; i < 7; i++) {
-      const checkDay = subDays(today, i);
-      const dStr = format(checkDay, 'yyyy-MM-dd');
-
-      const dayOfWeek = checkDay.getDay();
+    while (true) {
+      const dStr = format(checkDate, 'yyyy-MM-dd');
+      const dayOfWeek = checkDate.getDay();
       const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
 
-      // Find habits that were supposed to be done on this day
-      const habitsToComplete = habits.filter(h => {
+      const scheduledHabits = habits.filter(h => {
         if (h.frequency === 'Daily') return true;
         if (h.frequency === 'Weekdays' && !isWeekend) return true;
         if (h.frequency === 'Weekends' && isWeekend) return true;
         return false;
       });
 
-      // A day is perfect if there are scheduled habits AND they are all done
-      if (habitsToComplete.length > 0) {
-        const allDone = habitsToComplete.every(h =>
+      if (scheduledHabits.length > 0) {
+        const allDone = scheduledHabits.every(h =>
           h.logs.some(l => l.date === dStr && l.completed)
         );
-        if (allDone) perfectCount++;
+        if (allDone) {
+          streakCount++;
+        } else {
+          if (dStr === dateStr) {
+            checkDate = subDays(checkDate, 1);
+            continue;
+          }
+          break;
+        }
+      } else {
+        // No habits scheduled for this day, doesn't break streak but doesn't increment it?
+        // Actually, usually in habit trackers, a "Perfect Day" streak skips days with no habits.
+        // But here "Perfect Days" are days where you DID what you were supposed to.
+        // We'll skip days with no scheduled habits.
       }
+      checkDate = subDays(checkDate, 1);
+      if (differenceInCalendarDays(today, checkDate) > 365) break;
     }
-    return perfectCount;
+    return streakCount;
   };
-  const perfectDays = calculatePerfectDays();
+  const masterStreak = calculateMasterStreak();
 
   const handleToggleClick = (habitId) => {
     const habit = habits.find(h => h.id === habitId);
@@ -157,7 +172,7 @@ const HabitsView = () => {
   const confirmDelete = () => {
     setHabits(habits.filter(habit => habit.id !== deleteModal.habitId));
     setDeleteModal({ isOpen: false, habitId: null });
-    if (selectedHabit?.id === deleteModal.habitId) setSelectedHabit(null);
+    if (selectedHabitId === deleteModal.habitId) setSelectedHabitId(null);
   };
 
   const handleAddHabit = (e) => {
@@ -178,7 +193,7 @@ const HabitsView = () => {
     return (
       <div className="habits-detail-view fade-in">
         <div className="detail-header">
-          <button className="icon-btn" onClick={() => setSelectedHabit(null)}>
+          <button className="icon-btn" onClick={() => setSelectedHabitId(null)}>
             <ArrowLeft size={24} />
           </button>
           <h2>{selectedHabit.title}</h2>
@@ -245,6 +260,10 @@ const HabitsView = () => {
           </div>
         </div>
 
+        <div className="stats-mini" style={{ color: '#000000', fontWeight: 800 }}>
+          <Flame size={18} className="text-orange" />
+          <span>{masterStreak} Day Total Streak</span>
+        </div>
       </div>
 
       {/* Today's List */}
@@ -257,7 +276,7 @@ const HabitsView = () => {
             const currentStreak = getStreak(habit);
 
             return (
-              <div key={habit.id} className="habit-list-card" onClick={() => setSelectedHabit(habit)}>
+              <div key={habit.id} className="habit-list-card" onClick={() => setSelectedHabitId(habit.id)}>
                 <div className="habit-icon-wrapper">
                   {getIconForHabit(habit.title)}
                 </div>
@@ -284,6 +303,19 @@ const HabitsView = () => {
             );
           })}
         </div>
+
+        {/* New Summary Card below list */}
+        {habits.length > 0 && (
+          <div className="habit-summary-footer glass card" style={{ marginTop: '2rem', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div className="summary-text">
+              <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-muted)' }}>Master Streak</h4>
+              <p style={{ margin: '0.2rem 0 0', fontSize: '1.5rem', fontWeight: 900, color: '#3b82f6' }}>{masterStreak} Days</p>
+            </div>
+            <div className="summary-icon-big" style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '12px', borderRadius: '16px' }}>
+              <Trophy size={32} color="#3b82f6" />
+            </div>
+          </div>
+        )}
       </div>
 
       {isModalOpen && createPortal(
