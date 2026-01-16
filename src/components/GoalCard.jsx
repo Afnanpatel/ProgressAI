@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trash2, Calendar, Flag, Sparkles } from 'lucide-react';
+import { Trash2, Calendar, Flag, Sparkles, MoreVertical } from 'lucide-react';
 import { suggestTasksForGoal } from '../utils/aiMockServices';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { initialTasks } from '../data/initialData';
@@ -10,6 +10,7 @@ const GoalCard = ({ goal, onDelete }) => {
     const [tasks, setTasks] = useLocalStorage('tasks', initialTasks);
     const [isStrategizing, setIsStrategizing] = useState(false);
     const [showAINotification, setShowAINotification] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
 
     const getPriorityColor = (priority) => {
         switch (priority?.toLowerCase()) {
@@ -50,22 +51,42 @@ const GoalCard = ({ goal, onDelete }) => {
             )}
             <div className="goal-card-header">
                 <span className="goal-category badge">{goal.category}</span>
-                <div className="goal-actions">
+                <div className="goal-actions" style={{ position: 'relative' }}>
                     <button
-                        className={`icon-btn ai-btn ${isStrategizing ? 'strategizing' : ''}`}
-                        onClick={handleAIStrategize}
-                        title="AI Strategize"
-                        disabled={isStrategizing}
+                        className="icon-btn menu-btn"
+                        onClick={() => setShowMenu(!showMenu)}
+                        onBlur={() => setTimeout(() => setShowMenu(false), 200)} // Simple close on blur
                     >
-                        <Sparkles size={18} />
+                        <MoreVertical size={20} />
                     </button>
-                    <button
-                        className="icon-btn delete-btn"
-                        onClick={onDelete}
-                        title="Delete Goal"
-                    >
-                        <Trash2 size={18} />
-                    </button>
+
+                    {showMenu && (
+                        <div className="actions-menu glass scale-in">
+                            <button
+                                className={`menu-item ${isStrategizing ? 'strategizing' : ''}`}
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Prevent menu close immediately if needed, though blur handles it
+                                    handleAIStrategize();
+                                    setShowMenu(false);
+                                }}
+                                disabled={isStrategizing}
+                            >
+                                <Sparkles size={16} className="text-purple" />
+                                <span>AI Strategize</span>
+                            </button>
+                            <button
+                                className="menu-item delete-item"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDelete();
+                                    setShowMenu(false);
+                                }}
+                            >
+                                <Trash2 size={16} />
+                                <span>Delete Goal</span>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
