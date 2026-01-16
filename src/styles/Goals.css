@@ -193,10 +193,12 @@
         visibility: visible !important;
         display: flex !important;
         gap: 1.5rem !important;
-        /* Increased gap based on user feedback */
-        min-width: 80px;
-        /* Ensure space for buttons */
+        /* Retaining gap */
+        min-width: 100px;
+        /* Guarantee container width */
         justify-content: flex-end;
+        flex-shrink: 0;
+        /* Prevent squeezing */
     }
 
     .icon-btn,
@@ -206,8 +208,12 @@
         opacity: 1 !important;
         visibility: visible !important;
         width: 36px !important;
-        /* Fixed touch target size */
         height: 36px !important;
         padding: 8px !important;
+    }
+
+    .icon-btn.delete-btn {
+        margin-left: 0.5rem;
+        /* Additional spacer if gap fails */
     }
 }
