@@ -123,6 +123,46 @@
     color: var(--text-muted);
 }
 
+/* Action Buttons */
+.goal-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    color: var(--text-muted);
+    display: flex;
+    /* Ensure flex for centering icon */
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+}
+
+.ai-btn {
+    color: var(--secondary) !important;
+}
+
+.ai-btn:hover {
+    color: var(--accent) !important;
+    background: rgba(168, 85, 247, 0.1);
+}
+
+.delete-btn:hover {
+    color: var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+}
+
 @media (max-width: 768px) {
     .goals-header {
         flex-direction: column;
@@ -150,12 +190,17 @@
 
     .goal-actions {
         opacity: 1 !important;
+        visibility: visible !important;
         display: flex !important;
-        gap: 0.5rem;
     }
 
-    .icon-btn.ai-btn {
+    .icon-btn,
+    .icon-btn.ai-btn,
+    .icon-btn.delete-btn {
         display: flex !important;
         opacity: 1 !important;
+        visibility: visible !important;
+        width: auto !important;
+        height: auto !important;
     }
 }
