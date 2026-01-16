@@ -147,4 +147,15 @@
         /* Full width on mobile */
         gap: 1.5rem;
     }
+
+    .goal-actions {
+        opacity: 1 !important;
+        display: flex !important;
+        gap: 0.5rem;
+    }
+
+    .icon-btn.ai-btn {
+        display: flex !important;
+        opacity: 1 !important;
+    }
 }
