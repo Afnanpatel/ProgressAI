@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { Plus, Flame, CheckCircle2, Trophy, MoreVertical, ArrowLeft, Calendar as CalendarIcon, Smile, Dumbbell, BookOpen, Sun, Moon, Coffee } from 'lucide-react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { initialHabits } from '../data/initialData';
-import { format, isSameDay } from 'date-fns';
+import { format } from 'date-fns';
 import ConfirmationModal from './ConfirmationModal';
 import HabitCalendar from './HabitCalendar';
 import '../styles/Habits.css';
@@ -39,12 +39,13 @@ const HabitsView = () => {
   ).length;
   const completionRate = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
-  // Dynamic Perfect Days calculation (for simplicity checking last 7 days)
+  // Dynamic Perfect Days calculation (checking last 7 days)
   const calculatePerfectDays = () => {
     let perfectCount = 0;
+    if (habits.length === 0) return 0;
     for (let i = 0; i < 7; i++) {
       const d = format(new Date(today.getTime() - i * 86400000), 'yyyy-MM-dd');
-      if (habits.length > 0 && habits.every(h => h.logs.some(l => l.date === d && l.completed))) {
+      if (habits.every(h => h.logs.some(l => l.date === d && l.completed))) {
         perfectCount++;
       }
     }
@@ -56,12 +57,25 @@ const HabitsView = () => {
     const habit = habits.find(h => h.id === habitId);
     const isCompleted = habit.logs.some(l => l.date === dateStr);
 
-    // As per user request: Once completed, it shouldn't be unticked.
-    // If not completed, open reflection modal.
-    if (!isCompleted) {
-      setReflectionModal({ isOpen: true, habitId });
-      setLearningNote('');
+    if (isCompleted) return;
+
+    // Day of week check
+    const dayOfWeek = today.getDay(); // 0 is Sunday, 6 is Saturday
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    const isWeekday = !isWeekend;
+
+    if (habit.frequency === 'Weekdays' && isWeekend) {
+      alert("Don't try to cheat, focus on your habits! This habit is for weekdays only.");
+      return;
     }
+    if (habit.frequency === 'Weekends' && isWeekday) {
+      alert("Don't try to cheat, focus on your habits! This habit is for weekends only.");
+      return;
+    }
+
+    // If not completed, open reflection modal.
+    setReflectionModal({ isOpen: true, habitId });
+    setLearningNote('');
   };
 
   const handleSaveReflection = (e) => {
