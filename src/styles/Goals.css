@@ -192,6 +192,11 @@
         opacity: 1 !important;
         visibility: visible !important;
         display: flex !important;
+        gap: 1.5rem !important;
+        /* Increased gap based on user feedback */
+        min-width: 80px;
+        /* Ensure space for buttons */
+        justify-content: flex-end;
     }
 
     .icon-btn,
@@ -200,7 +205,9 @@
         display: flex !important;
         opacity: 1 !important;
         visibility: visible !important;
-        width: auto !important;
-        height: auto !important;
+        width: 36px !important;
+        /* Fixed touch target size */
+        height: 36px !important;
+        padding: 8px !important;
     }
 }
