@@ -25,36 +25,55 @@ const HabitsView = () => {
   const [selectedHabit, setSelectedHabit] = useState(null); // If set, shows Detail/Calendar view
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, habitId: null });
+  const [reflectionModal, setReflectionModal] = useState({ isOpen: false, habitId: null });
+  const [learningNote, setLearningNote] = useState('');
 
   const today = new Date();
+  const dateStr = format(today, 'yyyy-MM-dd');
 
   // Dashboard Stats
   const totalHabits = habits.length;
   // Check logs for today's date (yyyy-MM-dd)
   const completedToday = habits.filter(h =>
-    h.logs.some(l => l.date === format(today, 'yyyy-MM-dd') && l.completed)
+    h.logs.some(l => l.date === dateStr && l.completed)
   ).length;
   const completionRate = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
-  const handleToggleToday = (habitId) => {
-    const dateStr = format(today, 'yyyy-MM-dd');
+  // Dynamic Perfect Days calculation (for simplicity checking last 7 days)
+  const calculatePerfectDays = () => {
+    let perfectCount = 0;
+    for (let i = 0; i < 7; i++) {
+      const d = format(new Date(today.getTime() - i * 86400000), 'yyyy-MM-dd');
+      if (habits.length > 0 && habits.every(h => h.logs.some(l => l.date === d && l.completed))) {
+        perfectCount++;
+      }
+    }
+    return perfectCount;
+  };
+  const perfectDays = calculatePerfectDays();
+
+  const handleToggleClick = (habitId) => {
+    const habit = habits.find(h => h.id === habitId);
+    const isCompleted = habit.logs.some(l => l.date === dateStr);
+
+    // As per user request: Once completed, it shouldn't be unticked.
+    // If not completed, open reflection modal.
+    if (!isCompleted) {
+      setReflectionModal({ isOpen: true, habitId });
+      setLearningNote('');
+    }
+  };
+
+  const handleSaveReflection = (e) => {
+    e.preventDefault();
+    const { habitId } = reflectionModal;
     setHabits(habits.map(habit => {
       if (habit.id !== habitId) return habit;
 
-      const isCompleted = habit.logs.some(l => l.date === dateStr);
-      let newLogs;
-
-      if (isCompleted) {
-        newLogs = habit.logs.filter(l => l.date !== dateStr);
-      } else {
-        newLogs = [...habit.logs, { date: dateStr, completed: true }];
-      }
-
-      // Simple streak recalculation (can be enhanced later to be robust)
-      const streak = isCompleted ? Math.max(0, habit.streak - 1) : habit.streak + 1;
-
-      return { ...habit, logs: newLogs, streak };
+      const newLogs = [...habit.logs, { date: dateStr, completed: true, note: learningNote }];
+      return { ...habit, logs: newLogs, streak: habit.streak + 1 };
     }));
+    setReflectionModal({ isOpen: false, habitId: null });
   };
 
   const handleDeleteHabit = (id) => {
@@ -76,7 +95,7 @@ const HabitsView = () => {
       frequency: formData.get('frequency'),
       streak: 0,
       bestStreak: 0,
-      logs: [] // No icon field yet, using helper
+      logs: []
     };
     setHabits([...habits, newHabit]);
     setIsModalOpen(false);
@@ -135,7 +154,7 @@ const HabitsView = () => {
 
         <div className="stats-mini">
           <Trophy size={16} className="text-yellow" />
-          <span>2 perfect days this week</span>
+          <span>{perfectDays} perfect days this week</span>
         </div>
       </div>
 
@@ -145,7 +164,7 @@ const HabitsView = () => {
 
         <div className="habits-vertical-list">
           {habits.map(habit => {
-            const isCompleted = habit.logs.some(l => l.date === format(today, 'yyyy-MM-dd'));
+            const isCompleted = habit.logs.some(l => l.date === dateStr);
 
             return (
               <div key={habit.id} className="habit-list-card" onClick={() => setSelectedHabit(habit)}>
@@ -165,8 +184,9 @@ const HabitsView = () => {
                   className={`check-btn ${isCompleted ? 'completed' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleToggleToday(habit.id);
+                    handleToggleClick(habit.id);
                   }}
+                  disabled={isCompleted}
                 >
                   {isCompleted && <CheckCircle2 size={24} color="white" />}
                 </button>
@@ -190,12 +210,42 @@ const HabitsView = () => {
                 <select name="frequency">
                   <option value="Daily">Daily</option>
                   <option value="Weekdays">Weekdays</option>
+                  <option value="Weekends">Weekends</option>
                 </select>
               </div>
 
               <div className="modal-actions">
                 <button type="button" className="btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
                 <button type="submit" className="btn-primary rounded-full">Continue</button>
+              </div>
+            </form>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {reflectionModal.isOpen && createPortal(
+        <div className="modal-overlay">
+          <div className="modal-content card glass reflection-modal">
+            <div className="modal-header">
+              <CheckCircle2 size={32} color="#22c55e" />
+              <h3>Daily Reflection</h3>
+              <p>Great job! What did you learn from this habit today?</p>
+            </div>
+            <form onSubmit={handleSaveReflection}>
+              <div className="form-group">
+                <textarea
+                  required
+                  placeholder="Share a quick insight..."
+                  value={learningNote}
+                  onChange={(e) => setLearningNote(e.target.value)}
+                  autoFocus
+                  style={{ width: '100%', minHeight: '100px', background: 'var(--background)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem', marginTop: '1rem' }}
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="btn-secondary" onClick={() => setReflectionModal({ isOpen: false, habitId: null })}>Skip</button>
+                <button type="submit" className="btn-primary">Save & Complete</button>
               </div>
             </form>
           </div>

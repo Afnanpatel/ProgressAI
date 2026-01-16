@@ -65,22 +65,22 @@
 }
 
 .progress-text .label {
-    opacity: 0.9;
-    font-size: 0.9rem;
+    opacity: 1;
+    font-size: 0.95rem;
+    font-weight: 700;
 }
 
 .progress-bar-bg {
-    background: rgba(255, 255, 255, 0.2);
-    height: 8px;
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    height: 10px;
+    border-radius: 5px;
     overflow: hidden;
 }
 
 .progress-bar-fill {
-    background: #a5f3fc;
-    /* Cyan bright tint */
+    background: #ffffff;
     height: 100%;
-    border-radius: 4px;
+    border-radius: 5px;
     transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -88,13 +88,13 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    opacity: 0.9;
+    font-size: 0.95rem;
+    font-weight: 800;
+    opacity: 1;
 }
 
 .text-yellow {
-    color: #fcd34d;
+    color: #fbbf24;
 }
 
 /* Vertical List */
