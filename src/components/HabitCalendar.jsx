@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths } from 'date-fns';
-import { ChevronLeft, ChevronRight, Flame, Target } from 'lucide-react';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMonths, subMonths } from 'date-fns';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const HabitCalendar = ({ habit, streak }) => {
+const HabitCalendar = ({ habit }) => {
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
     const monthStart = startOfMonth(currentMonth);
@@ -16,11 +16,6 @@ const HabitCalendar = ({ habit, streak }) => {
     const prevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
     const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
 
-    // Calc Rate
-    const completedCount = habit.logs.filter(l => l.completed).length;
-    // This is a simple rate, ideally it should be against applicable days
-    const rate = habit.logs.length > 0 ? Math.round((completedCount / (habit.logs.length || 1)) * 100) : 0;
-
     return (
         <div className="habit-calendar-wrapper">
             <div className="calendar-header">
@@ -29,12 +24,16 @@ const HabitCalendar = ({ habit, streak }) => {
                 <button onClick={nextMonth}><ChevronRight /></button>
             </div>
 
-            <div className="calendar-grid-header">
-                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => <div key={d} className="day-name">{d}</div>)}
+            <div className="calendar-days-header">
+                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => (
+                    <div key={d} className="day-name">{d}</div>
+                ))}
             </div>
 
             <div className="calendar-body">
-                {paddingDays.map((_, i) => <div key={`p-${i}`} className="calendar-cell disabled" />)}
+                {paddingDays.map((_, i) => (
+                    <div key={`p-${i}`} className="calendar-cell disabled" />
+                ))}
                 {daysInMonth.map(day => {
                     const dateStr = format(day, 'yyyy-MM-dd');
                     const isCompleted = habit.logs.some(l => l.date === dateStr && l.completed);
@@ -49,23 +48,6 @@ const HabitCalendar = ({ habit, streak }) => {
                         </div>
                     );
                 })}
-            </div>
-
-            <div className="calendar-footer">
-                <div className="stat-item">
-                    <span className="label">Streak</span>
-                    <div className="value-row">
-                        <Flame size={20} className="text-orange" />
-                        <span className="value">{streak}</span>
-                    </div>
-                </div>
-                <div className="stat-item">
-                    <span className="label">Rate</span>
-                    <div className="value-row">
-                        <Target size={20} className="text-blue" />
-                        <span className="value">{rate}%</span>
-                    </div>
-                </div>
             </div>
         </div>
     );

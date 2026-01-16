@@ -47,9 +47,8 @@ const HabitsView = () => {
     let streakCount = 0;
     let checkDate = new Date();
 
-    // Sort logs descending
-    const sortedLogs = [...logs].sort((a, b) => new Date(b.date) - new Date(a.date));
-    const completedDates = new Set(sortedLogs.filter(l => l.completed).map(l => l.date));
+    // Use a Set for O(1) lookups
+    const completedDates = new Set(logs.filter(l => l.completed).map(l => l.date));
 
     // Start checking from today backwards
     while (true) {
@@ -81,14 +80,32 @@ const HabitsView = () => {
     return streakCount;
   };
 
-  // Dynamic Perfect Days calculation (for simplicity checking last 7 days)
+  // Dynamic Perfect Days calculation (checking last 7 days)
   const calculatePerfectDays = () => {
     let perfectCount = 0;
     if (habits.length === 0) return 0;
+
     for (let i = 0; i < 7; i++) {
-      const d = format(subDays(today, i), 'yyyy-MM-dd');
-      if (habits.every(h => h.logs.some(l => l.date === d && l.completed))) {
-        perfectCount++;
+      const checkDay = subDays(today, i);
+      const dStr = format(checkDay, 'yyyy-MM-dd');
+
+      const dayOfWeek = checkDay.getDay();
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+      // Find habits that were supposed to be done on this day
+      const habitsToComplete = habits.filter(h => {
+        if (h.frequency === 'Daily') return true;
+        if (h.frequency === 'Weekdays' && !isWeekend) return true;
+        if (h.frequency === 'Weekends' && isWeekend) return true;
+        return false;
+      });
+
+      // A day is perfect if there are scheduled habits AND they are all done
+      if (habitsToComplete.length > 0) {
+        const allDone = habitsToComplete.every(h =>
+          h.logs.some(l => l.date === dStr && l.completed)
+        );
+        if (allDone) perfectCount++;
       }
     }
     return perfectCount;
@@ -207,10 +224,6 @@ const HabitsView = () => {
           </div>
         </div>
 
-        <div className="stats-mini">
-          <Trophy size={16} className="text-yellow" />
-          <span>{perfectDays} perfect days this week</span>
-        </div>
       </div>
 
       {/* Today's List */}
