@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMonths, subMonths } from 'date-fns';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Flame, Target } from 'lucide-react';
 
-const HabitCalendar = ({ habit }) => {
+const HabitCalendar = ({ habit, streak }) => {
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
     const monthStart = startOfMonth(currentMonth);
@@ -15,6 +15,10 @@ const HabitCalendar = ({ habit }) => {
 
     const prevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
     const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
+
+    // Calc Rate
+    const completedCount = habit.logs.filter(l => l.completed).length;
+    const rate = habit.logs.length > 0 ? Math.round((completedCount / (habit.logs.length || 1)) * 100) : 0;
 
     return (
         <div className="habit-calendar-wrapper">
@@ -48,6 +52,23 @@ const HabitCalendar = ({ habit }) => {
                         </div>
                     );
                 })}
+            </div>
+
+            <div className="calendar-footer">
+                <div className="stat-item">
+                    <span className="label">Streak</span>
+                    <div className="value-row" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <Flame size={20} className="text-orange" />
+                        <span className="value" style={{ fontSize: '1.5rem', fontWeight: '800', color: '#3b82f6' }}>{streak}</span>
+                    </div>
+                </div>
+                <div className="stat-item">
+                    <span className="label">Rate</span>
+                    <div className="value-row" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <Target size={20} className="text-blue" style={{ color: '#3b82f6' }} />
+                        <span className="value" style={{ fontSize: '1.5rem', fontWeight: '800', color: '#3b82f6' }}>{rate}%</span>
+                    </div>
+                </div>
             </div>
         </div>
     );
