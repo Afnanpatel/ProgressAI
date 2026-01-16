@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Plus, Flame, CheckCircle2, Trophy, MoreVertical, ArrowLeft, Calendar as CalendarIcon, Smile, Dumbbell, BookOpen, Sun, Moon, Coffee } from 'lucide-react';
+import { Plus, Flame, CheckCircle2, Trophy, MoreVertical, ArrowLeft, Calendar as CalendarIcon, Smile, Dumbbell, BookOpen, Sun, Moon, Coffee, AlertCircle } from 'lucide-react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { initialHabits } from '../data/initialData';
-import { format } from 'date-fns';
+import { format, subDays, differenceInCalendarDays } from 'date-fns';
 import ConfirmationModal from './ConfirmationModal';
 import HabitCalendar from './HabitCalendar';
 import '../styles/Habits.css';
 
 // Simple Icon Mapping Helper
-const getIconForHabit = (title, frequency) => {
+const getIconForHabit = (title) => {
   const t = title.toLowerCase();
   if (t.includes('read') || t.includes('book')) return <BookOpen size={24} />;
   if (t.includes('gym') || t.includes('workout') || t.includes('exercise')) return <Dumbbell size={24} />;
@@ -26,6 +26,7 @@ const HabitsView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, habitId: null });
   const [reflectionModal, setReflectionModal] = useState({ isOpen: false, habitId: null });
+  const [cheatModal, setCheatModal] = useState({ isOpen: false, message: '' });
   const [learningNote, setLearningNote] = useState('');
 
   const today = new Date();
@@ -33,18 +34,59 @@ const HabitsView = () => {
 
   // Dashboard Stats
   const totalHabits = habits.length;
-  // Check logs for today's date (yyyy-MM-dd)
   const completedToday = habits.filter(h =>
     h.logs.some(l => l.date === dateStr && l.completed)
   ).length;
   const completionRate = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
-  // Dynamic Perfect Days calculation (checking last 7 days)
+  // Robust Dynamic Streak Calculation
+  const getStreak = (habit) => {
+    const logs = habit.logs || [];
+    if (logs.length === 0) return 0;
+
+    let streakCount = 0;
+    let checkDate = new Date();
+
+    // Sort logs descending
+    const sortedLogs = [...logs].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const completedDates = new Set(sortedLogs.filter(l => l.completed).map(l => l.date));
+
+    // Start checking from today backwards
+    while (true) {
+      const dStr = format(checkDate, 'yyyy-MM-dd');
+      const dayOfWeek = checkDate.getDay();
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+      let shouldHaveCompleted = true;
+      if (habit.frequency === 'Weekdays' && isWeekend) shouldHaveCompleted = false;
+      if (habit.frequency === 'Weekends' && !isWeekend) shouldHaveCompleted = false;
+
+      if (shouldHaveCompleted) {
+        if (completedDates.has(dStr)) {
+          streakCount++;
+        } else {
+          // If it's today and not yet completed, don't break the streak yet
+          if (dStr === dateStr) {
+            checkDate = subDays(checkDate, 1);
+            continue;
+          }
+          break; // Streak broken
+        }
+      }
+      checkDate = subDays(checkDate, 1);
+
+      // Safety break
+      if (differenceInCalendarDays(today, checkDate) > 365) break;
+    }
+    return streakCount;
+  };
+
+  // Dynamic Perfect Days calculation (for simplicity checking last 7 days)
   const calculatePerfectDays = () => {
     let perfectCount = 0;
     if (habits.length === 0) return 0;
     for (let i = 0; i < 7; i++) {
-      const d = format(new Date(today.getTime() - i * 86400000), 'yyyy-MM-dd');
+      const d = format(subDays(today, i), 'yyyy-MM-dd');
       if (habits.every(h => h.logs.some(l => l.date === d && l.completed))) {
         perfectCount++;
       }
@@ -55,6 +97,7 @@ const HabitsView = () => {
 
   const handleToggleClick = (habitId) => {
     const habit = habits.find(h => h.id === habitId);
+    if (!habit) return;
     const isCompleted = habit.logs.some(l => l.date === dateStr);
 
     if (isCompleted) return;
@@ -65,11 +108,11 @@ const HabitsView = () => {
     const isWeekday = !isWeekend;
 
     if (habit.frequency === 'Weekdays' && isWeekend) {
-      alert("Don't try to cheat, focus on your habits! This habit is for weekdays only.");
+      setCheatModal({ isOpen: true, message: "Don't try to cheat, focus on your habits! This habit is only for weekdays." });
       return;
     }
     if (habit.frequency === 'Weekends' && isWeekday) {
-      alert("Don't try to cheat, focus on your habits! This habit is for weekends only.");
+      setCheatModal({ isOpen: true, message: "Don't try to cheat, focus on your habits! This habit is only for weekends." });
       return;
     }
 
@@ -85,7 +128,7 @@ const HabitsView = () => {
       if (habit.id !== habitId) return habit;
 
       const newLogs = [...habit.logs, { date: dateStr, completed: true, note: learningNote }];
-      return { ...habit, logs: newLogs, streak: habit.streak + 1 };
+      return { ...habit, logs: newLogs };
     }));
     setReflectionModal({ isOpen: false, habitId: null });
   };
@@ -107,8 +150,6 @@ const HabitsView = () => {
       id: Date.now().toString(),
       title: formData.get('title'),
       frequency: formData.get('frequency'),
-      streak: 0,
-      bestStreak: 0,
       logs: []
     };
     setHabits([...habits, newHabit]);
@@ -130,7 +171,7 @@ const HabitsView = () => {
         </div>
 
         <div className="detail-content">
-          <HabitCalendar habit={selectedHabit} />
+          <HabitCalendar habit={selectedHabit} streak={getStreak(selectedHabit)} />
         </div>
 
         <ConfirmationModal
@@ -179,18 +220,19 @@ const HabitsView = () => {
         <div className="habits-vertical-list">
           {habits.map(habit => {
             const isCompleted = habit.logs.some(l => l.date === dateStr);
+            const currentStreak = getStreak(habit);
 
             return (
               <div key={habit.id} className="habit-list-card" onClick={() => setSelectedHabit(habit)}>
                 <div className="habit-icon-wrapper">
-                  {getIconForHabit(habit.title, habit.frequency)}
+                  {getIconForHabit(habit.title)}
                 </div>
 
                 <div className="habit-info">
                   <h3 className="habit-title">{habit.title}</h3>
                   <div className="habit-streak">
-                    <Flame size={14} className={habit.streak > 0 ? "text-orange" : "text-muted"} />
-                    <span>{habit.streak} in a row</span>
+                    <Flame size={14} className={currentStreak > 0 ? "text-orange" : "text-muted"} />
+                    <span>{currentStreak} in a row</span>
                   </div>
                 </div>
 
@@ -262,6 +304,24 @@ const HabitsView = () => {
                 <button type="submit" className="btn-primary">Save & Complete</button>
               </div>
             </form>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {cheatModal.isOpen && createPortal(
+        <div className="modal-overlay">
+          <div className="modal-content card glass reflection-modal">
+            <div className="modal-header">
+              <AlertCircle size={48} color="#ef4444" />
+              <h3>Whoops!</h3>
+            </div>
+            <p style={{ margin: '1rem 0' }}>{cheatModal.message}</p>
+            <div className="modal-actions" style={{ justifyContent: 'center' }}>
+              <button className="btn-primary" onClick={() => setCheatModal({ isOpen: false, message: '' })}>
+                I Understand
+              </button>
+            </div>
           </div>
         </div>,
         document.body
