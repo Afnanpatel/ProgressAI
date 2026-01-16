@@ -192,13 +192,12 @@
         opacity: 1 !important;
         visibility: visible !important;
         display: flex !important;
-        gap: 1.5rem !important;
-        /* Retaining gap */
-        min-width: 100px;
-        /* Guarantee container width */
+        gap: 0 !important;
+        /* Reset gap to use margins */
+        min-width: auto;
         justify-content: flex-end;
+        align-items: center;
         flex-shrink: 0;
-        /* Prevent squeezing */
     }
 
     .icon-btn,
@@ -209,11 +208,18 @@
         visibility: visible !important;
         width: 36px !important;
         height: 36px !important;
-        padding: 8px !important;
+        padding: 0 !important;
+        /* Remove padding to ensure size is pure */
+        flex: 0 0 36px !important;
+        /* Prevent shrinking */
+        align-items: center;
+        justify-content: center;
+        margin: 0 !important;
+        /* Reset margins */
     }
 
     .icon-btn.delete-btn {
-        margin-left: 0.5rem;
-        /* Additional spacer if gap fails */
+        margin-left: 16px !important;
+        /* Explicit 16px gap */
     }
 }
