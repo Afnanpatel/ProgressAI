@@ -50,6 +50,14 @@ export const calculateHabitStreak = (habit, today = new Date()) => {
 };
 
 /**
+ * Calculates "Total Habit Streak" as the sum of all individual streaks.
+ */
+export const calculateTotalStreakSum = (habits, today = new Date()) => {
+    if (!habits || habits.length === 0) return 0;
+    return habits.reduce((acc, habit) => acc + calculateHabitStreak(habit, today), 0);
+};
+
+/**
  * Checks if a specific date was a "Perfect Day" (all scheduled habits completed).
  */
 export const isPerfectDay = (habits, date) => {
@@ -61,43 +69,6 @@ export const isPerfectDay = (habits, date) => {
     return scheduledHabits.every(h =>
         h.logs && h.logs.some(l => l.date === dStr && l.completed)
     );
-};
-
-/**
- * Calculates "Master Streak" (days in a row that were Perfect Days).
- */
-export const calculateMasterStreak = (habits, today = new Date()) => {
-    if (!habits || habits.length === 0) return 0;
-
-    const todayStr = format(today, 'yyyy-MM-dd');
-    let streakCount = 0;
-    let checkDate = new Date(today);
-
-    while (true) {
-        const dStr = format(checkDate, 'yyyy-MM-dd');
-        const scheduledHabits = habits.filter(h => isHabitScheduled(h, checkDate));
-
-        if (scheduledHabits.length > 0) {
-            const allDone = scheduledHabits.every(h =>
-                h.logs && h.logs.some(l => l.date === dStr && l.completed)
-            );
-            if (allDone) {
-                streakCount++;
-            } else {
-                if (dStr === todayStr) {
-                    checkDate = subDays(checkDate, 1);
-                    continue;
-                }
-                break;
-            }
-        } else {
-            // Skip days with no habits scheduled (doesn't break or increment)
-        }
-
-        checkDate = subDays(checkDate, 1);
-        if (differenceInCalendarDays(today, checkDate) > 365) break;
-    }
-    return streakCount;
 };
 
 /**

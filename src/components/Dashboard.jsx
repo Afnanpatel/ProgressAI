@@ -12,7 +12,7 @@ import {
 import useLocalStorage from '../hooks/useLocalStorage';
 import { initialGoals, initialTasks, initialHabits } from '../data/initialData';
 import { getRandomCoachInsight } from '../utils/aiMockServices';
-import { calculateHabitStreak, calculateMasterStreak } from '../utils/habitUtils';
+import { calculateHabitStreak, calculateTotalStreakSum } from '../utils/habitUtils';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -79,11 +79,11 @@ const Dashboard = () => {
   const totalTasks = tasks.length;
   const taskCompletionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
-  // Use improved streak logic
+  // Use improved sum-based streak logic
   const today = new Date();
-  const masterStreak = calculateMasterStreak(habits, today);
+  const totalStreakSum = calculateTotalStreakSum(habits, today);
   const avgHabitStreak = habits.length > 0
-    ? Math.round(habits.reduce((acc, h) => acc + calculateHabitStreak(h, today), 0) / habits.length)
+    ? Math.round(totalStreakSum / habits.length)
     : 0;
 
   const categoryData = {
@@ -133,9 +133,9 @@ const Dashboard = () => {
           <p className="section-subtitle">You're making incredible strides today. Keep the fire burning!</p>
         </div>
         <div className="quick-actions">
-          <div className="master-streak-badge" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(245, 158, 11, 0.1)', padding: '8px 16px', borderRadius: '30px', color: '#f59e0b', fontWeight: '800' }}>
+          <div className="total-streak-badge" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(245, 158, 11, 0.1)', padding: '8px 16px', borderRadius: '30px', color: '#f59e0b', fontWeight: '800' }}>
             <Flame size={20} />
-            <span>{masterStreak} DAY TOTAL STREAK</span>
+            <span>{totalStreakSum} TOTAL STREAK</span>
           </div>
         </div>
       </div>
@@ -157,8 +157,8 @@ const Dashboard = () => {
         />
         <StatCard
           title="Total Streak"
-          value={`${masterStreak} days`}
-          subValue="Perfect Consistency"
+          value={`${totalStreakSum} days`}
+          subValue="Accumulative"
           icon={Trophy}
           color="#f59e0b"
         />
@@ -257,7 +257,7 @@ const Dashboard = () => {
                 "{getRandomCoachInsight({
                   goalsCount: goals.length,
                   tasksDone: completedTasks,
-                  habitsStreak: masterStreak
+                  habitsStreak: totalStreakSum
                 })}"
               </p>
               <div className="modern-progress-bar">

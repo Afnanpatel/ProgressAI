@@ -4,7 +4,7 @@ import { Plus, Flame, CheckCircle2, Trophy, MoreVertical, ArrowLeft, Calendar as
 import useLocalStorage from '../hooks/useLocalStorage';
 import { initialHabits } from '../data/initialData';
 import { format } from 'date-fns';
-import { calculateHabitStreak, calculateMasterStreak } from '../utils/habitUtils';
+import { calculateHabitStreak, calculateTotalStreakSum } from '../utils/habitUtils';
 import ConfirmationModal from './ConfirmationModal';
 import HabitCalendar from './HabitCalendar';
 import '../styles/Habits.css';
@@ -39,16 +39,16 @@ const HabitsView = () => {
   // Dashboard Stats
   const totalHabits = habits.length;
   const completedToday = habits.filter(h =>
-    h.logs.some(l => l.date === dateStr && l.completed)
+    h.logs && h.logs.some(l => l.date === dateStr && l.completed)
   ).length;
   const completionRate = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
-  const masterStreak = calculateMasterStreak(habits, today);
+  const totalStreakSum = calculateTotalStreakSum(habits, today);
 
   const handleToggleClick = (habitId) => {
     const habit = habits.find(h => h.id === habitId);
     if (!habit) return;
-    const isCompleted = habit.logs.some(l => l.date === dateStr);
+    const isCompleted = habit.logs && habit.logs.some(l => l.date === dateStr);
 
     if (isCompleted) return;
 
@@ -178,7 +178,7 @@ const HabitsView = () => {
 
         <div className="stats-mini" style={{ color: '#000000', fontWeight: 800 }}>
           <Flame size={18} className="text-orange" />
-          <span>{masterStreak} Day Total Streak</span>
+          <span>{totalStreakSum} Total Streak</span>
         </div>
       </div>
 
@@ -222,8 +222,8 @@ const HabitsView = () => {
         {habits.length > 0 && (
           <div className="habit-summary-footer glass card" style={{ marginTop: '2rem', padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div className="summary-text">
-              <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-muted)' }}>Master Streak</h4>
-              <p style={{ margin: '0.2rem 0 0', fontSize: '1.5rem', fontWeight: 900, color: '#3b82f6' }}>{masterStreak} Days</p>
+              <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-muted)' }}>Total Accumulative Streak</h4>
+              <p style={{ margin: '0.2rem 0 0', fontSize: '1.5rem', fontWeight: 900, color: '#3b82f6' }}>{totalStreakSum} Days</p>
             </div>
             <div className="summary-icon-big" style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '12px', borderRadius: '16px' }}>
               <Trophy size={32} color="#3b82f6" />
