@@ -66,17 +66,18 @@ export const exportToPDF = (data, filename, type = 'goals') => {
             doc.setTextColor(107, 114, 128);
 
             if (type === 'goals') {
-                doc.text(`Category: ${item.category || 'N/A'}  |  Priority: ${item.priority || 'N/A'}  |  Progress: ${item.progress || 0}%`, 20, y);
+                // progress is now a string like "25%" from enriched data
+                doc.text(`Category: ${item.category || 'N/A'}  |  Priority: ${item.priority || 'N/A'}  |  Progress: ${item.progress || '0%'}`, 20, y);
                 y += 7;
                 doc.text(`Target Deadline: ${item.deadline || 'N/A'}`, 20, y);
             } else if (type === 'tasks') {
                 doc.text(`Priority: ${item.priority || 'N/A'}  |  Status: ${item.status || 'N/A'}  |  Goal: ${item.goalTitle || 'None'}`, 20, y);
                 y += 7;
-                doc.text(`Date Created: ${item.date || item.createdAt || 'N/A'}`, 20, y);
+                doc.text(`Due Date: ${item.dueDate || 'N/A'}`, 20, y);
             } else if (type === 'habits') {
                 doc.text(`Frequency: ${item.frequency || 'N/A'}  |  Consistency: ${item.consistency || 0}%  |  Streak: ${item.streak || 0}`, 20, y);
                 y += 7;
-                doc.text(`Category: ${item.category || 'N/A'}`, 20, y);
+                doc.text(`Status: Active Tracking`, 20, y);
             }
 
             if (item.description || item.notes) {

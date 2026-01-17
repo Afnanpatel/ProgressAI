@@ -193,6 +193,18 @@ const ProfileView = () => {
                 </section>
             </div>
 
+            <div className="website-info-section card glass">
+                <div className="section-header justify-center">
+                    <Shield size={20} />
+                    <h3>Website Info</h3>
+                </div>
+                <div className="website-credits">
+                    <p>This website was created by</p>
+                    <h4>AFNAN PATEL</h4>
+                    <span className="engineer-tag">I'm an engineer</span>
+                </div>
+            </div>
+
             <ConfirmationModal
                 isOpen={modalConfig.isOpen}
                 title={modalConfig.title}
