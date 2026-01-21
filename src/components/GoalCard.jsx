@@ -11,6 +11,12 @@ const GoalCard = ({ goal, onDelete }) => {
     const [showAINotification, setShowAINotification] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef(null);
+    const tasksRef = useRef(tasks);
+
+    // Update tasksRef whenever tasks change
+    useEffect(() => {
+        tasksRef.current = tasks;
+    }, [tasks]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -37,7 +43,8 @@ const GoalCard = ({ goal, onDelete }) => {
     const handleAIStrategize = () => {
         setIsStrategizing(true);
         setTimeout(() => {
-            const existingGoalTasks = tasks.filter(t => t.goalId === goal.id);
+            const currentTasks = tasksRef.current;
+            const existingGoalTasks = currentTasks.filter(t => t.goalId === goal.id);
             const suggestedTitles = suggestTasksForGoal(goal.title, goal.category, existingGoalTasks.length);
             const newTasks = suggestedTitles.map(title => ({
                 id: Date.now().toString() + Math.random(),

@@ -31,28 +31,28 @@ export const DataProvider = ({ children }) => {
         });
     }, [tasks]);
 
-    const addGoal = (goal) => setGoals([...goals, goal]);
+    const addGoal = (goal) => setGoals(prev => [...prev, goal]);
 
     const deleteGoal = (goalId) => {
-        setGoals(goals.filter(g => g.id !== goalId));
+        setGoals(prev => prev.filter(g => g.id !== goalId));
         // Cleanup associated tasks
-        setTasks(tasks.filter(t => t.goalId !== goalId));
+        setTasks(prev => prev.filter(t => t.goalId !== goalId));
     };
 
     const updateGoal = (goalId, updates) => {
-        setGoals(goals.map(g => g.id === goalId ? { ...g, ...updates } : g));
+        setGoals(prev => prev.map(g => g.id === goalId ? { ...g, ...updates } : g));
     };
 
-    const addTask = (task) => setTasks([...tasks, task]);
+    const addTask = (task) => setTasks(prev => [...prev, task]);
 
-    const addTasks = (newTasks) => setTasks([...tasks, ...newTasks]);
+    const addTasks = (newTasks) => setTasks(prev => [...prev, ...newTasks]);
 
     const deleteTask = (taskId) => {
-        setTasks(tasks.filter(t => t.id !== taskId));
+        setTasks(prev => prev.filter(t => t.id !== taskId));
     };
 
     const updateTask = (taskId, updates) => {
-        setTasks(tasks.map(t => t.id === taskId ? { ...t, ...updates } : t));
+        setTasks(prev => prev.map(t => t.id === taskId ? { ...t, ...updates } : t));
     };
 
     return (
