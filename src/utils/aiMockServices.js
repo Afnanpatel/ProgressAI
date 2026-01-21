@@ -72,13 +72,13 @@ export const suggestTasksForGoal = (goalTitle, category, currentTaskCount = 0) =
 
         // 1. Try to get a specific pre-written task if available and not "used" (simulated by index)
         if (taskIndex < specificTasks.length) {
-            generatedTasks.push(`Step ${stepNum}: ${specificTasks[taskIndex]}`);
+            generatedTasks.push(specificTasks[taskIndex]);
         } else {
             // 2. Fallback to dynamic generation for infinite tasks
             const action = dynamicActions[taskIndex % dynamicActions.length];
             // Truncate goal title if too long to keep it clean
             const shortTitle = goalTitle.length > 20 ? goalTitle.substring(0, 20) + "..." : goalTitle;
-            generatedTasks.push(`Step ${stepNum}: ${action} "${shortTitle}"`);
+            generatedTasks.push(`${action} "${shortTitle}"`);
         }
     }
 

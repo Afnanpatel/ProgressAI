@@ -111,8 +111,9 @@ const TasksView = () => {
 
               {isExpanded && (
                 <div className="tasks-list glass fade-in">
-                  {goalTasks.map(task => {
+                  {goalTasks.map((task, index) => {
                     const isDone = task.status === 'Done';
+                    const displayTitle = task.title.replace(/^Step \d+: /, '');
                     return (
                       <div key={task.id} className={`task-item scale-in ${isDone ? 'completed' : ''}`}>
                         <button className="status-toggle" onClick={() => toggleTaskStatus(task.id)}>
@@ -120,7 +121,7 @@ const TasksView = () => {
                         </button>
                         <div className="task-info">
                           <div className="task-title-row">
-                            <span className="task-title">{task.title}</span>
+                            <span className="task-title">Step {index + 1}: {displayTitle}</span>
                             {isDone && <span className="completed-badge">COMPLETED</span>}
                           </div>
                           <div className="task-meta">
