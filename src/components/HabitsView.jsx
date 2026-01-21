@@ -276,7 +276,7 @@ const HabitsView = () => {
                   value={learningNote}
                   onChange={(e) => setLearningNote(e.target.value)}
                   autoFocus
-                  style={{ width: '100%', minHeight: '100px', background: 'var(--background)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem', marginTop: '1rem' }}
+                  style={{ width: '100%', minHeight: '100px', marginTop: '1rem' }}
                 />
               </div>
               <div className="modal-actions">
@@ -296,7 +296,7 @@ const HabitsView = () => {
               <AlertCircle size={48} color="#ef4444" />
               <h3>Whoops!</h3>
             </div>
-            <p style={{ margin: '1rem 0' }}>{cheatModal.message}</p>
+            <p className="cheat-message">{cheatModal.message}</p>
             <div className="modal-actions" style={{ justifyContent: 'center' }}>
               <button className="btn-primary" onClick={() => setCheatModal({ isOpen: false, message: '' })}>
                 I Understand
