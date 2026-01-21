@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
+import { DataProvider } from './context/DataContext';
 import { useAuth } from './hooks/useAuth';
 import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
@@ -70,9 +71,11 @@ const AppContent = () => {
 function App() {
   return (
     <AuthProvider>
-      <ThemeProvider>
-        <AppContent />
-      </ThemeProvider>
+      <DataProvider>
+        <ThemeProvider>
+          <AppContent />
+        </ThemeProvider>
+      </DataProvider>
     </AuthProvider>
   );
 }

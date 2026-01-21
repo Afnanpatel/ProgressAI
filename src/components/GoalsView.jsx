@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Plus, Search, Filter } from 'lucide-react';
 import GoalCard from './GoalCard';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { initialGoals } from '../data/initialData';
+import { useData } from '../context/DataContext';
 import { exportToCSV, exportToPDF } from '../utils/exportUtils';
 import ConfirmationModal from './ConfirmationModal';
 import '../styles/Goals.css';
 
 const GoalsView = () => {
-  const [goals, setGoals] = useLocalStorage('goals', initialGoals);
+  const { goals, addGoal, deleteGoal } = useData();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
@@ -29,7 +28,7 @@ const GoalsView = () => {
   };
 
   const confirmDelete = () => {
-    setGoals(goals.filter(goal => goal.id !== deleteModal.goalId));
+    deleteGoal(deleteModal.goalId);
     setDeleteModal({ isOpen: false, goalId: null });
   };
 
@@ -48,7 +47,7 @@ const GoalsView = () => {
       progress: 0,
       motivation: formData.get('motivation')
     };
-    setGoals([...goals, newGoal]);
+    addGoal(newGoal);
     setIsModalOpen(false);
   };
 

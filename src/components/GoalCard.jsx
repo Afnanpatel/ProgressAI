@@ -1,16 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Trash2, Calendar, Flag, Sparkles, MoreVertical } from 'lucide-react';
 import { suggestTasksForGoal } from '../utils/aiMockServices';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { initialTasks } from '../data/initialData';
+import { useData } from '../context/DataContext';
 import ConfirmationModal from './ConfirmationModal';
 import '../styles/Goals.css';
 
 const GoalCard = ({ goal, onDelete }) => {
-    const [tasks, setTasks] = useLocalStorage('tasks', initialTasks);
+    const { tasks, addTasks } = useData();
     const [isStrategizing, setIsStrategizing] = useState(false);
     const [showAINotification, setShowAINotification] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
+    const menuRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setShowMenu(false);
+            }
+        };
+
+        if (showMenu) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [showMenu]);
 
     const getPriorityColor = (priority) => {
         switch (priority?.toLowerCase()) {
@@ -34,7 +47,7 @@ const GoalCard = ({ goal, onDelete }) => {
                 dueDate: goal.deadline,
                 effort: 'Medium'
             }));
-            setTasks([...tasks, ...newTasks]);
+            addTasks(newTasks);
             setIsStrategizing(false);
             setShowAINotification(true);
             setTimeout(() => setShowAINotification(false), 3000);
@@ -51,11 +64,10 @@ const GoalCard = ({ goal, onDelete }) => {
             )}
             <div className="goal-card-header">
                 <span className="goal-category badge">{goal.category}</span>
-                <div className="goal-actions" style={{ position: 'relative' }}>
+                <div className="goal-actions" style={{ position: 'relative' }} ref={menuRef}>
                     <button
                         className="icon-btn menu-btn"
                         onClick={() => setShowMenu(!showMenu)}
-                        onBlur={() => setTimeout(() => setShowMenu(false), 200)} // Simple close on blur
                     >
                         <MoreVertical size={20} />
                     </button>

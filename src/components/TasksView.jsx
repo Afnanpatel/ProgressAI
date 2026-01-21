@@ -1,36 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Plus, CheckCircle2, Circle, Clock, Tag, Trash2 } from 'lucide-react';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { initialTasks, initialGoals } from '../data/initialData';
+import { useData } from '../context/DataContext';
 import ConfirmationModal from './ConfirmationModal';
 import '../styles/Tasks.css';
 
 const TasksView = () => {
-  const [tasks, setTasks] = useLocalStorage('tasks', initialTasks);
-  const [goals, setGoals] = useLocalStorage('goals', initialGoals);
+  const { tasks, updateTask, deleteTask, goals, addTask } = useData();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [notification, setNotification] = useState({ show: false, message: '' });
   const [expandedGoalId, setExpandedGoalId] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, taskId: null });
-
-  // Sync goal progress when tasks change
-  useEffect(() => {
-    const updatedGoals = goals.map(goal => {
-      const goalTasks = tasks.filter(t => t.goalId === goal.id);
-      if (goalTasks.length === 0) return goal;
-
-      const completedTasksCount = goalTasks.filter(t => t.status === 'Done').length;
-      const newProgress = Math.round((completedTasksCount / goalTasks.length) * 100);
-
-      return { ...goal, progress: newProgress };
-    });
-
-    const hasChanged = JSON.stringify(updatedGoals) !== JSON.stringify(goals);
-    if (hasChanged) {
-      setGoals(updatedGoals);
-    }
-  }, [tasks, goals, setGoals]);
 
   const showNotification = (message) => {
     setNotification({ show: true, message });
@@ -38,16 +18,14 @@ const TasksView = () => {
   };
 
   const toggleTaskStatus = (taskId) => {
-    setTasks(tasks.map(task => {
-      if (task.id === taskId) {
-        const isNowDone = task.status !== 'Done';
-        if (isNowDone) {
-          showNotification('Task completed successfully! 🎉');
-        }
-        return { ...task, status: isNowDone ? 'Done' : 'Pending' };
+    const task = tasks.find(t => t.id === taskId);
+    if (task) {
+      const isNowDone = task.status !== 'Done';
+      if (isNowDone) {
+        showNotification('Task completed successfully! 🎉');
       }
-      return task;
-    }));
+      updateTask(taskId, { status: isNowDone ? 'Done' : 'Pending' });
+    }
   };
 
   const handleDeleteTask = (id) => {
@@ -55,7 +33,7 @@ const TasksView = () => {
   };
 
   const confirmDelete = () => {
-    setTasks(tasks.filter(task => task.id !== deleteModal.taskId));
+    deleteTask(deleteModal.taskId);
     setDeleteModal({ isOpen: false, taskId: null });
     showNotification('Task deleted.');
   };
@@ -71,7 +49,7 @@ const TasksView = () => {
       dueDate: formData.get('dueDate'),
       effort: formData.get('effort')
     };
-    setTasks([...tasks, newTask]);
+    addTask(newTask);
     setIsModalOpen(false);
     showNotification('New task created!');
   };

@@ -9,8 +9,9 @@ import {
   Sparkles,
   Trophy
 } from 'lucide-react';
+import { useData } from '../context/DataContext';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { initialGoals, initialTasks, initialHabits } from '../data/initialData';
+import { initialHabits } from '../data/initialData';
 import { getRandomCoachInsight } from '../utils/aiMockServices';
 import { calculateHabitStreak, calculateTotalStreakSum } from '../utils/habitUtils';
 import {
@@ -59,8 +60,7 @@ const StatCard = ({ title, value, icon: IconComponent, color, subValue }) => (
 );
 
 const Dashboard = () => {
-  const [goals] = useLocalStorage('goals', initialGoals);
-  const [tasks] = useLocalStorage('tasks', initialTasks);
+  const { goals, tasks } = useData();
   const [habits] = useLocalStorage('habits', initialHabits);
 
   const quotes = [

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Cpu, Brain, Zap, LineChart, ShieldCheck, TrendingUp, Sparkles } from 'lucide-react';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { initialGoals } from '../data/initialData';
+import { useData } from '../context/DataContext';
 import { getForecastAnalytics } from '../utils/aiMockServices';
 import '../styles/AI.css';
 
 const AIHub = () => {
-    const [goals] = useLocalStorage('goals', initialGoals);
+    const { goals } = useData();
     const [forecasts, setForecasts] = useState([]);
     const [isScanning, setIsScanning] = useState(true);
 
